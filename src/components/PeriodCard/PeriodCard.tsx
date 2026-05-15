@@ -7,13 +7,15 @@ interface PeriodCardProps {
 }
 
 export default function PeriodCard({ period }: PeriodCardProps) {
+	const isNegative = period?.balanceMinutes || 0 < 0 
+
 	return (
 		<Card>
         <CardContent>
           <Grid container spacing={2}>
             <Grid size={4} >
               <Typography variant="subtitle2" gutterBottom >Saldo Total</Typography>
-              <Typography variant="h6">{formatMinutesToHoursString(period?.balanceMinutes || 0)}</Typography>
+              <Typography variant="h6" color={ isNegative ? "error" : "success" }>{formatMinutesToHoursString(period?.balanceMinutes || 0)}</Typography>
             </Grid>
             <Grid container spacing={1.6}>
               <Grid size={4} >

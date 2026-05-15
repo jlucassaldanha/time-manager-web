@@ -20,12 +20,14 @@ interface DailyAccordionProps {
 }
 
 export default function DailyAccordion({ day }: DailyAccordionProps) {
+  const isNegative = day.balanceMinutes < 0
+
   return (
     <Accordion disableGutters >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%", pr: 2 }}>
           <Typography variant="h6" >{formatToBrDateString(day.date)}</Typography>
-          <Typography variant="subtitle1">{formatMinutesToHoursString(day.balanceMinutes)}</Typography>
+          <Typography variant="subtitle1" color={isNegative ? "error" : "success"}>{formatMinutesToHoursString(day.balanceMinutes)}</Typography>
         </Box>
       </AccordionSummary>
       <AccordionDetails>
@@ -46,13 +48,14 @@ export default function DailyAccordion({ day }: DailyAccordionProps) {
         
         <Divider sx={{ mb: 2 }} />
 
-        <Typography variant="subtitle1" >Registros</Typography>
+        {day.punches.length > 0 && <Typography variant="subtitle1" >Registros</Typography>}
+
         <Grid container spacing={2}>
           {day.punches.map((punch, i) => (
             <Grid key={i} sx={{ display: "flex", gap: 2, mt: 2, mb: 2 }} size={2}>
               <DisplayInfo 
-                title={formatDateToTimeString(punch.timestamp)}
-                info={punch.type}
+                title={punch.type === "Entry" ? "Entrada" : "Saida"}
+                info={formatDateToTimeString(punch.timestamp)}
               />
             </Grid>
           ))}
