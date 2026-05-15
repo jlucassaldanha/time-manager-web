@@ -22,6 +22,8 @@ interface DailyAccordionProps {
 export default function DailyAccordion({ day }: DailyAccordionProps) {
   const isNegative = day.balanceMinutes < 0
 
+  const havePunches = day.punches.length > 0
+
   return (
     <Accordion disableGutters >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -48,7 +50,7 @@ export default function DailyAccordion({ day }: DailyAccordionProps) {
         
         <Divider sx={{ mb: 2 }} />
 
-        {day.punches.length > 0 && <Typography variant="subtitle1" >Registros</Typography>}
+        {havePunches && <Typography variant="subtitle1" >Registros</Typography>}
 
         <Grid container spacing={2}>
           {day.punches.map((punch, i) => (
@@ -62,7 +64,9 @@ export default function DailyAccordion({ day }: DailyAccordionProps) {
         </Grid>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-          <Button variant="contained" >Editar</Button>
+          {havePunches ? 
+            <Button variant="contained" >Editar</Button> 
+            : <Button variant="contained" >Adicionar</Button> }
         </Box>
       </AccordionDetails>
     </Accordion>
