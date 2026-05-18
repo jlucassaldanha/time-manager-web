@@ -1,40 +1,30 @@
 "use client";
 
 import PeriodController from "@/components/PeriodController/PeriodController";
-import { GetPeriodSummaryAction } from "@/core/actions/SummaryActions";
-import { PeriodSummaryResponse } from "@/core/domain/entities/Summary";
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
 import DailyAccordion from "@/components/DailyAccordion/DailyAccordion";
 import PeriodCard from "@/components/PeriodCard/PeriodCard";
+import DynamicPunchModal from "@/components/DynamicPunchModal/DynamicPunchModal";
+import useSummaryRecords from "@/hooks/useSummaryRecords";
+import useDynamicPunchModal from "@/hooks/useDynamicPunchModal";
 
 export default function Summary() {
-  const initialStartDate = new Date();
-  initialStartDate.setDate(initialStartDate.getDate() - 7);
-  const initialStartDateString = initialStartDate.toISOString().split("T")[0];
+  const { records, startDate, endDate, setStartDate, setEndDate, handleClick } =
+    useSummaryRecords();
 
-  const initialEndDateString = new Date().toISOString().split("T")[0];
-
-  const [startDate, setStartDate] = useState<string>(initialStartDateString);
-  const [endDate, setEndDate] = useState<string>(initialEndDateString);
-  const [data, setData] = useState<PeriodSummaryResponse>();
-
-  useEffect(() => {
-    const getData = async () => {
-      const value = await GetPeriodSummaryAction(startDate, endDate);
-      setData(value);
-    };
-
-    getData();
-  }, []);
-
-  const handleClick = async () => {
-    const value = await GetPeriodSummaryAction(startDate, endDate);
-    setData(value);
-  };
+  const {
+    title,
+    initialData,
+    editingDate,
+    handleOpenModal,
+    handleCloseModal,
+    handleSavePunches,
+  } = useDynamicPunchModal(records);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 3, padding: "5px" }}>
+    <Box
+      sx={{ display: "flex", flexDirection: "column", gap: 3, padding: "5px" }}
+    >
       <PeriodController
         onClick={handleClick}
         onStartDateChange={setStartDate}
@@ -43,14 +33,21 @@ export default function Summary() {
         endDateValue={endDate}
       />
 
-      <PeriodCard period={data}/>
+      <PeriodCard period={records} />
 
       <Box>
-        {data?.days.map((day, i) => (
-          <DailyAccordion day={day} key={i} />
+        {records?.days.map((day, i) => (
+          <DailyAccordion day={day} key={i} openModal={handleOpenModal} />
         ))}
       </Box>
-      
+
+      <DynamicPunchModal
+        title={title}
+        date={editingDate}
+        initialData={initialData}
+        onClose={handleCloseModal}
+        onSave={handleSavePunches}
+      />
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import DynamicPunchCard from "@/components/EditPunchCard/DynamicPunchCard";
+import DynamicPunchCard from "@/components/DynamicPunchCard/DynamicPunchCard";
 import { RecordType } from "@/core/domain/entities/TimeRecord";
 
 export interface PunchEntry {

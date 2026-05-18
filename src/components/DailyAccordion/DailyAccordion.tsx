@@ -17,9 +17,10 @@ import { formatDateToTimeString } from "@/utils/formatDateToTimeString";
 
 interface DailyAccordionProps {
   day: DailySummaryResponse;
+  openModal: (title: string, date: string) => void
 }
 
-export default function DailyAccordion({ day }: DailyAccordionProps) {
+export default function DailyAccordion({ day, openModal }: DailyAccordionProps) {
   const isNegative = day.balanceMinutes < 0
 
   const havePunches = day.punches.length > 0
@@ -65,8 +66,8 @@ export default function DailyAccordion({ day }: DailyAccordionProps) {
 
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
           {havePunches ? 
-            <Button variant="contained" >Editar</Button> 
-            : <Button variant="contained" >Adicionar</Button> }
+            <Button variant="contained" onClick={() => openModal("Editar", formatToBrDateString(day.date))}>Editar</Button> 
+            : <Button variant="contained" onClick={() => (openModal("Adicionar", formatToBrDateString(day.date)))}>Adicionar</Button> }
         </Box>
       </AccordionDetails>
     </Accordion>
