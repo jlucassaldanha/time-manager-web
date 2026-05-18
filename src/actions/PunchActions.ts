@@ -4,8 +4,8 @@ import { CreateManualPunchUseCase } from "@/core/application/useCases/CreateManu
 import { CreateRealtimePunchUseCase } from "@/core/application/useCases/CreateRealtimePunchUseCase";
 import { RecordType } from "@/core/domain/entities/TimeRecord";
 import { ApiTimeRecordRepository } from "@/core/infrastructure/ApiTimeRecordRepository";
-import { UpdatePunchUseCase } from "../application/useCases/UpdatePunchUseCase";
-import { DeletePunchUseCase } from "../application/useCases/DeletePunchUseCase";
+import { UpdatePunchUseCase } from "../core/application/useCases/UpdatePunchUseCase";
+import { DeletePunchUseCase } from "../core/application/useCases/DeletePunchUseCase";
 import parseBrDateToIsoWithOffset from "@/utils/parseBrDateToIsoWithOffset";
 
 export async function CreateRealtimePunchAction() {
@@ -20,8 +20,13 @@ export async function CreateRealtimePunchAction() {
   }
 }
 
-export async function CreateManualPunchAction(date: string, time: string, type: RecordType, note: string) {
-  const rawDatetime = parseBrDateToIsoWithOffset(date, time)
+export async function CreateManualPunchAction(
+  date: string,
+  time: string,
+  type: RecordType,
+  note: string,
+) {
+  const rawDatetime = parseBrDateToIsoWithOffset(date, time);
 
   const datetime = new Date(rawDatetime);
 
@@ -48,8 +53,14 @@ export async function CreateManualPunchAction(date: string, time: string, type: 
   }
 }
 
-export async function UpdatePunchAction(recordId: string, date: string, time: string, type: RecordType, note: string) {
-  const rawDatetime = parseBrDateToIsoWithOffset(date, time)
+export async function UpdatePunchAction(
+  recordId: string,
+  date: string,
+  time: string,
+  type: RecordType,
+  note: string,
+) {
+  const rawDatetime = parseBrDateToIsoWithOffset(date, time);
 
   const datetime = new Date(rawDatetime);
 
@@ -77,7 +88,10 @@ export async function UpdatePunchAction(recordId: string, date: string, time: st
   }
 }
 
-export async function DeletePunchAction(recordId: string, justification: string) {
+export async function DeletePunchAction(
+  recordId: string,
+  justification: string,
+) {
   const repository = new ApiTimeRecordRepository();
   const deleteUseCase = new DeletePunchUseCase(repository);
 

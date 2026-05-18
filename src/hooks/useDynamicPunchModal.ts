@@ -3,14 +3,17 @@ import { formatDateToTimeString } from "@/utils/formatDateToTimeString";
 import { formatToBrDateString } from "@/utils/formatToBrDateString";
 import { PunchEntry } from "./useDynamicPunches";
 import { useState } from "react";
-import { CreateManualPunchAction, DeletePunchAction, UpdatePunchAction } from "@/core/actions/PunchActions";
+import {
+  CreateManualPunchAction,
+  DeletePunchAction,
+  UpdatePunchAction,
+} from "@/actions/PunchActions";
 
 export default function useDynamicPunchModal(
   records: PeriodSummaryResponse | undefined,
-  onSuccessRefresh: () => void
+  onSuccessRefresh: () => void,
 ) {
-
-	const [editingDate, setEditingDate] = useState<string | null>(null);
+  const [editingDate, setEditingDate] = useState<string | null>(null);
   const [title, setTitle] = useState<string>("");
 
   const handleOpenModal = (title: string, date: string) => {
@@ -22,43 +25,59 @@ export default function useDynamicPunchModal(
     setEditingDate(null);
   };
 
-  const initialData = records?.days
-    .find((day) => formatToBrDateString(day.date) === editingDate)
-    ?.punches.map((punch) => {
-      return {
-        id: punch.id,
-        time: formatDateToTimeString(punch.timestamp),
-        type: punch.type,
-        note: punch.note,
-      };
-    }) || [];
+  const initialData =
+    records?.days
+      .find((day) => formatToBrDateString(day.date) === editingDate)
+      ?.punches.map((punch) => {
+        return {
+          id: punch.id,
+          time: formatDateToTimeString(punch.timestamp),
+          type: punch.type,
+          note: punch.note,
+        };
+      }) || [];
 
-  const handleSavePunches = async (idsToDelete: string[], date: string, punches: PunchEntry[]) => {
-    const realIds = initialData.map((p) => p.id)
+  const handleSavePunches = async (
+    idsToDelete: string[],
+    date: string,
+    punches: PunchEntry[],
+  ) => {
+    const realIds = initialData.map((p) => p.id);
 
     for (let i = 0; i < punches.length; i++) {
-      const punch = punches[i]
+      const punch = punches[i];
 
       if (realIds.includes(punch.id)) {
-        await UpdatePunchAction(punch.id, date, punch.time, punch.type, punch.note || "N/A")
+        await UpdatePunchAction(
+          punch.id,
+          date,
+          punch.time,
+          punch.type,
+          punch.note || "N/A",
+        );
       } else {
-        await CreateManualPunchAction(date, punch.time, punch.type, punch.note || "N/A")
+        await CreateManualPunchAction(
+          date,
+          punch.time,
+          punch.type,
+          punch.note || "N/A",
+        );
       }
     }
 
     for (let i = 0; i < idsToDelete.length; i++) {
-      await DeletePunchAction(idsToDelete[i], "N/A")
+      await DeletePunchAction(idsToDelete[i], "N/A");
     }
 
-    onSuccessRefresh()
+    onSuccessRefresh();
   };
 
-	return {
-		title,
-		initialData,
-		editingDate,
-		handleOpenModal,
-		handleCloseModal,
-		handleSavePunches
-	}
+  return {
+    title,
+    initialData,
+    editingDate,
+    handleOpenModal,
+    handleCloseModal,
+    handleSavePunches,
+  };
 }

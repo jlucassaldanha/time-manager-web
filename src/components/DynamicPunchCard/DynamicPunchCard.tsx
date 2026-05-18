@@ -4,7 +4,6 @@ import useDynamicPunches, { PunchEntry } from "@/hooks/useDynamicPunches";
 import {
   Box,
   Button,
-  Divider,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -25,10 +24,6 @@ export default function DynamicPunchCard({
 
   return (
     <Box>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button onClick={addPunch}>Adicionar batida</Button>
-      </Box>
-      <Divider sx={{ mt: 1, mb: 1 }} />
       <Box
         sx={{
           display: "flex",
@@ -100,7 +95,8 @@ export default function DynamicPunchCard({
           </Typography>
         )}
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Button onClick={addPunch}>Adicionar batida</Button>
         <Button variant="contained" onClick={() => onSave(deletedIds, punches)}>
           Salvar alterações
         </Button>

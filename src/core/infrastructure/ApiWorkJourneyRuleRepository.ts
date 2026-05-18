@@ -1,8 +1,21 @@
-import { WorkJourneyRule } from "@/core/domain/entities/WorkJourneyRule";
+import { WorkJourneyResponse, WorkJourneyRule } from "@/core/domain/entities/WorkJourneyRule";
 import { IWorkJourneyRuleRepository } from "@/core/domain/interfaces/IWorkJourneyRuleRepository";
 
 export class ApiWorkJourneyRuleRepository implements IWorkJourneyRuleRepository {
   private readonly baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  async get(): Promise<WorkJourneyResponse> {
+    const response = await fetch(`${this.baseUrl}/api/workjourneyrule`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error("Falha ao registrar regras.");
+    }
+
+    return response.json()
+  }
 
   async create(rule: WorkJourneyRule): Promise<void> {
     const response = await fetch(`${this.baseUrl}/api/workjourneyrule/create`, {

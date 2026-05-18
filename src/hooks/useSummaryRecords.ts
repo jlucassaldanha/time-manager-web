@@ -1,4 +1,4 @@
-import { GetPeriodSummaryAction } from "@/core/actions/SummaryActions";
+import { GetPeriodSummaryAction } from "@/actions/SummaryActions";
 import { PeriodSummaryResponse } from "@/core/domain/entities/Summary";
 import { useEffect, useState } from "react";
 
@@ -28,11 +28,11 @@ export default function useSummaryRecords() {
   };
 
   return {
-	records,
-	startDate,
-	endDate,
-	setStartDate,
-	setEndDate,
-	handleGetPeriodClick
-  }
+    records,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    handleGetPeriodClick,
+  };
 }
