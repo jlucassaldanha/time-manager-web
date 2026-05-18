@@ -4,6 +4,9 @@ import { CreateManualPunchUseCase } from "@/core/application/useCases/CreateManu
 import { CreateRealtimePunchUseCase } from "@/core/application/useCases/CreateRealtimePunchUseCase";
 import { RecordType } from "@/core/domain/entities/TimeRecord";
 import { ApiTimeRecordRepository } from "@/core/infrastructure/ApiTimeRecordRepository";
+import { UpdatePunchUseCase } from "../application/useCases/UpdatePunchUseCase";
+import { DeletePunchUseCase } from "../application/useCases/DeletePunchUseCase";
+import parseBrDateToIsoWithOffset from "@/utils/parseBrDateToIsoWithOffset";
 
 export async function CreateRealtimePunchAction() {
   const repository = new ApiTimeRecordRepository();
@@ -17,14 +20,8 @@ export async function CreateRealtimePunchAction() {
   }
 }
 
-export async function CreateManualPunchAction(formData: FormData) {
-  const rawDatetime = formData.get("datetime");
-  const type = formData.get("type");
-  const note = formData.get("note");
-
-  if (!rawDatetime || typeof rawDatetime !== "string") {
-    throw new Error("Data e hora são obrigatorias");
-  }
+export async function CreateManualPunchAction(date: string, time: string, type: RecordType, note: string) {
+  const rawDatetime = parseBrDateToIsoWithOffset(date, time)
 
   const datetime = new Date(rawDatetime);
 
@@ -42,11 +39,8 @@ export async function CreateManualPunchAction(formData: FormData) {
   try {
     await createUseCase.execute({
       datetime,
-      type: type as RecordType,
-      note:
-        typeof note === "string" && note.trim() !== ""
-          ? note.trim()
-          : undefined,
+      type,
+      note,
     });
   } catch (error) {
     console.error(error);
@@ -54,7 +48,46 @@ export async function CreateManualPunchAction(formData: FormData) {
   }
 }
 
-// fazer
-export async function UpdatePunchAction(formData: FormData) {}
+export async function UpdatePunchAction(recordId: string, date: string, time: string, type: RecordType, note: string) {
+  const rawDatetime = parseBrDateToIsoWithOffset(date, time)
 
-export async function DeletePunchAction(formData: FormData) {}
+  const datetime = new Date(rawDatetime);
+
+  if (isNaN(datetime.getTime())) {
+    throw new Error("Formato de data e hora inválido.");
+  }
+
+  if (type !== "Entry" && type !== "Exit") {
+    throw new Error("Tipo errado");
+  }
+
+  const repository = new ApiTimeRecordRepository();
+  const updateUseCase = new UpdatePunchUseCase(repository);
+
+  try {
+    await updateUseCase.execute({
+      recordId,
+      dateTime: datetime,
+      type,
+      note,
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error("Erro ao processar o registro.");
+  }
+}
+
+export async function DeletePunchAction(recordId: string, justification: string) {
+  const repository = new ApiTimeRecordRepository();
+  const deleteUseCase = new DeletePunchUseCase(repository);
+
+  try {
+    await deleteUseCase.execute({
+      recordId,
+      justification,
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error("Erro ao processar o registro.");
+  }
+}

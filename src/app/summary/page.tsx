@@ -9,7 +9,7 @@ import useSummaryRecords from "@/hooks/useSummaryRecords";
 import useDynamicPunchModal from "@/hooks/useDynamicPunchModal";
 
 export default function Summary() {
-  const { records, startDate, endDate, setStartDate, setEndDate, handleClick } =
+  const { records, startDate, endDate, setStartDate, setEndDate, handleGetPeriodClick } =
     useSummaryRecords();
 
   const {
@@ -19,14 +19,14 @@ export default function Summary() {
     handleOpenModal,
     handleCloseModal,
     handleSavePunches,
-  } = useDynamicPunchModal(records);
+  } = useDynamicPunchModal(records, handleGetPeriodClick);
 
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", gap: 3, padding: "5px" }}
     >
       <PeriodController
-        onClick={handleClick}
+        onClick={handleGetPeriodClick}
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
         startDateValue={startDate}
@@ -42,6 +42,7 @@ export default function Summary() {
       </Box>
 
       <DynamicPunchModal
+        key={editingDate || 'closed'}
         title={title}
         date={editingDate}
         initialData={initialData}

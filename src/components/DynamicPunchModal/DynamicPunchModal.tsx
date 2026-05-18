@@ -7,15 +7,15 @@ interface DynamicPunchModalProps {
 	date: string | null
 	initialData?: PunchEntry[]
 	onClose: () => void
-	onSave: (date: string, punches: PunchEntry[]) => void
+	onSave: (idsToDelete: string[], date: string, punches: PunchEntry[]) => void
 }
 
 export default function DynamicPunchModal({ title, date, initialData = [], onClose, onSave }: DynamicPunchModalProps) {
 	const isOpen = Boolean(date)
 
-	const handleSave = (punches: PunchEntry[]) => {
+	const handleSave = (idsToDelete: string[], punches: PunchEntry[]) => {
 		if (date) {
-			onSave(date, punches)
+			onSave(idsToDelete, date, punches)
 			onClose()
 		}
 	}

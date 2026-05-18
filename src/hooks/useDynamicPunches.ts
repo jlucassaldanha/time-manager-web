@@ -10,6 +10,7 @@ export interface PunchEntry {
 
 export default function useDynamicPunches(initialPunches: PunchEntry[] = []) {
   const [punches, setPunches] = useState<PunchEntry[]>(initialPunches);
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
 
   const addPunch = () => {
     const newPunch: PunchEntry = {
@@ -22,6 +23,12 @@ export default function useDynamicPunches(initialPunches: PunchEntry[] = []) {
   };
 
   const removePunch = (id: string) => {
+    const isRealId = initialPunches.some((p) => p.id === id);
+
+    if (isRealId) {
+      setDeletedIds((prev) => [...prev, id]);
+    }
+
     setPunches((prev) => prev.filter((punch) => punch.id !== id));
   };
 
@@ -35,6 +42,7 @@ export default function useDynamicPunches(initialPunches: PunchEntry[] = []) {
 
   return {
     punches,
+    deletedIds,
     addPunch,
     removePunch,
     updatePunch,

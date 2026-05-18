@@ -22,7 +22,7 @@ export default function useSummaryRecords() {
     getRecords();
   }, []);
 
-  const handleClick = async () => {
+  const handleGetPeriodClick = async () => {
     const value = await GetPeriodSummaryAction(startDate, endDate);
     setRecords(value);
   };
@@ -33,6 +33,6 @@ export default function useSummaryRecords() {
 	endDate,
 	setStartDate,
 	setEndDate,
-	handleClick
+	handleGetPeriodClick
   }
 }

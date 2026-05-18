@@ -13,14 +13,14 @@ import {
 
 interface DynamicPunchesCardProps {
   initialData?: PunchEntry[];
-  onSave: (data: PunchEntry[]) => void;
+  onSave: (idsToDelete: string[], data: PunchEntry[]) => void;
 }
 
 export default function DynamicPunchCard({
   initialData = [],
-  onSave,
+  onSave
 }: DynamicPunchesCardProps) {
-  const { punches, addPunch, removePunch, updatePunch } =
+  const { punches, deletedIds, addPunch, removePunch, updatePunch } =
     useDynamicPunches(initialData);
 
   return (
@@ -101,7 +101,7 @@ export default function DynamicPunchCard({
         )}
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
-        <Button variant="contained" onClick={() => onSave(punches)}>
+        <Button variant="contained" onClick={() => onSave(deletedIds, punches)}>
           Salvar alterações
         </Button>
       </Box>
