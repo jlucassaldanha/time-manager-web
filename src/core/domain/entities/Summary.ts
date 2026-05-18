@@ -9,6 +9,7 @@ export type PunchDto = {
 	id: string;
 	timestamp: Date;
 	type: RecordType;
+	note?: string
 }
 
 export type DailySummaryResponse = {

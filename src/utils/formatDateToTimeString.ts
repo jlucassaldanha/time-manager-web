@@ -1,7 +1,15 @@
-export function formatDateToTimeString(date: Date): string {
-	const dateString = date.toString()
+export function formatDateToTimeString(dateInput: string | Date): string {
+	if (!dateInput) return ""
 
-	const timePart = dateString.split('T')[1]
+	const validDate = new Date(dateInput)
 
-	return timePart.slice(0, 5)
+	if (isNaN(validDate.getTime())) {
+		console.warn("Data inválida para conversão de hora:", dateInput);
+		return "";
+	}
+
+	return validDate.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
 }

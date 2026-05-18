@@ -15,7 +15,11 @@ export class ApiTimeRecordRepository implements ITimeRecordRepository {
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao registrar ponto.");
+      const errorBody = await response.text(); 
+      
+      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
+      
+      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
     }
   }
 
@@ -27,31 +31,43 @@ export class ApiTimeRecordRepository implements ITimeRecordRepository {
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao registrar ponto.");
+      const errorBody = await response.text(); 
+      
+      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
+      
+      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
     }
   }
 
   async update(record: UpdateTimeRecord): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/workjourneyrule/update`, {
+    const response = await fetch(`${this.baseUrl}/api/timepunch/update`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(record),
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao registrar ponto.");
+      const errorBody = await response.text(); 
+      
+      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
+      
+      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
     }
   }
 
   async delete(record: DeleteTimeRecord): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/workjourneyrule/update`, {
+    const response = await fetch(`${this.baseUrl}/api/timepunch/delete`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(record),
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao registrar ponto.");
+      const errorBody = await response.text(); 
+      
+      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
+      
+      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
     }
   }
 }

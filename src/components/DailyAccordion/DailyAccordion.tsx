@@ -17,15 +17,20 @@ import { formatDateToTimeString } from "@/utils/formatDateToTimeString";
 
 interface DailyAccordionProps {
   day: DailySummaryResponse;
+  openModal: (title: string, date: string) => void
 }
 
-export default function DailyAccordion({ day }: DailyAccordionProps) {
+export default function DailyAccordion({ day, openModal }: DailyAccordionProps) {
+  const isNegative = day.balanceMinutes < 0
+
+  const havePunches = day.punches.length > 0
+
   return (
     <Accordion disableGutters >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%", pr: 2 }}>
           <Typography variant="h6" >{formatToBrDateString(day.date)}</Typography>
-          <Typography variant="subtitle1">{formatMinutesToHoursString(day.balanceMinutes)}</Typography>
+          <Typography variant="subtitle1" color={isNegative ? "error" : "success"}>{formatMinutesToHoursString(day.balanceMinutes)}</Typography>
         </Box>
       </AccordionSummary>
       <AccordionDetails>
@@ -46,20 +51,23 @@ export default function DailyAccordion({ day }: DailyAccordionProps) {
         
         <Divider sx={{ mb: 2 }} />
 
-        <Typography variant="subtitle1" >Registros</Typography>
+        {havePunches && <Typography variant="subtitle1" >Registros</Typography>}
+
         <Grid container spacing={2}>
           {day.punches.map((punch, i) => (
             <Grid key={i} sx={{ display: "flex", gap: 2, mt: 2, mb: 2 }} size={2}>
               <DisplayInfo 
-                title={formatDateToTimeString(punch.timestamp)}
-                info={punch.type}
+                title={punch.type === "Entry" ? "Entrada" : "Saida"}
+                info={formatDateToTimeString(punch.timestamp)}
               />
             </Grid>
           ))}
         </Grid>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-          <Button variant="contained" >Editar</Button>
+          {havePunches ? 
+            <Button variant="contained" onClick={() => openModal("Editar", formatToBrDateString(day.date))}>Editar</Button> 
+            : <Button variant="contained" onClick={() => (openModal("Adicionar", formatToBrDateString(day.date)))}>Adicionar</Button> }
         </Box>
       </AccordionDetails>
     </Accordion>
