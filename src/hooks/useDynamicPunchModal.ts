@@ -16,12 +16,12 @@ export default function useDynamicPunchModal(
   const [editingDate, setEditingDate] = useState<string | null>(null);
   const [title, setTitle] = useState<string>("");
 
-  const handleOpenModal = (title: string, date: string) => {
+  const handleOpenPunchModal = (title: string, date: string) => {
     setEditingDate(date);
     setTitle(title);
   };
 
-  const handleCloseModal = () => {
+  const handleClosePunchModal = () => {
     setEditingDate(null);
   };
 
@@ -76,8 +76,8 @@ export default function useDynamicPunchModal(
     title,
     initialData,
     editingDate,
-    handleOpenModal,
-    handleCloseModal,
+    handleOpenPunchModal,
+    handleClosePunchModal,
     handleSavePunches,
   };
 }

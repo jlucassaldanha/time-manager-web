@@ -53,7 +53,7 @@ export async function UpdateWorkJourneyRuleAction(rules: WorkJourneyRule) {
       sunday: rules.sunday,
     });
   } catch (error) {
-    console.error(error);
+    console.error("WorkJourneyRule:", error);
     throw new Error("Erro ao processar o registro.");
   }
 }

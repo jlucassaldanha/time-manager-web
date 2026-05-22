@@ -1,15 +1,16 @@
+"use client"
+
 import {
-  CreateManualPunchAction,
   CreateRealtimePunchAction,
 } from "@/actions/PunchActions";
-import { CreateWorkJourneyRuleAction } from "@/actions/WorkJourneyRuleActions";
+import { Box, Button } from "@mui/material";
 
 export default function Home() {
   return (
-    <div>
+    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
       <form action={CreateRealtimePunchAction}>
-        <button type="submit">Bater ponto</button>
+        <Button type="submit" variant="contained">Bater ponto</Button>
       </form>
-    </div>
+    </Box>
   );
 }

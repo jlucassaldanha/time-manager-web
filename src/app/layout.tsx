@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +25,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Box sx={{flexGrow: 1, mb: 3}}>
+          <AppBar position="static" >
+            <Toolbar sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+              <Button color="inherit" >
+                Relatório
+              </Button>
+              <Button color="inherit" >
+                Bater ponto
+              </Button>
+              <Button color="inherit" >
+                Editar jornada
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </Box>
+        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          {children}
+        </Box>
+      </body>
     </html>
   );
 }

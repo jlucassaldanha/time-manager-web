@@ -11,7 +11,11 @@ export class ApiWorkJourneyRuleRepository implements IWorkJourneyRuleRepository 
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao registrar regras.");
+      const errorBody = await response.text(); 
+      
+      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
+      
+      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
     }
 
     return response.json()
@@ -25,7 +29,11 @@ export class ApiWorkJourneyRuleRepository implements IWorkJourneyRuleRepository 
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao registrar regras.");
+      const errorBody = await response.text(); 
+      
+      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
+      
+      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
     }
   }
 
@@ -37,7 +45,11 @@ export class ApiWorkJourneyRuleRepository implements IWorkJourneyRuleRepository 
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao registrar regras.");
+      const errorBody = await response.text(); 
+      
+      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
+      
+      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
     }
   }
 }

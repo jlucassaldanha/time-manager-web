@@ -13,7 +13,7 @@ export async function GetPeriodSummaryAction(
   try {
     const response = await getUseCase.execute({
       startDate: startDateString,
-      endDate: endDateString,
+      endDate: `${endDateString.split('T')[0]}T23:59:59`,
     });
 
     return response;

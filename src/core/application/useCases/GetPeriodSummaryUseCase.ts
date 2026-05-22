@@ -6,7 +6,7 @@ export class GetPeriodSummaryUseCase {
 	private readonly summaryRepository: ISummaryRepository,
   ) {}
 
-  async execute(request: PeriodSummaryRequest): Promise<PeriodSummaryResponse> {
+  async execute(request: PeriodSummaryRequest): Promise<PeriodSummaryResponse | null> {
 	return await this.summaryRepository.getPeriod(request);
   }
 }
