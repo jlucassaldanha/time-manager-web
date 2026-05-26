@@ -2,6 +2,7 @@
 
 import { loginAction } from "@/actions/AuthActions";
 import { Box, Button, TextField } from "@mui/material";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export default function Login() {
@@ -21,7 +22,6 @@ export default function Login() {
 	}
 
   return (
-	// depois que logar, se a pessoa tentar registrar ponto sem colocar a jornada da um erro
     <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, mt: 15}}>
       <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
         <TextField
@@ -49,7 +49,7 @@ export default function Login() {
       </Box>
       <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
         <Button variant="contained" onClick={handleLogin}>Entrar</Button>
-        <Button variant="contained" >Cadastrar</Button>
+        <Button variant="contained" onClick={() => redirect("/register")}>Cadastrar</Button>
       </Box>
     </Box>
   );

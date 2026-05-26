@@ -69,7 +69,6 @@ export default function Summary() {
           )
         })}
       </Box>
-
       {error === "User need journey rules" && (
         <Alert 
           severity="warning" 

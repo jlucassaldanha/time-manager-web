@@ -1,6 +1,8 @@
 "use server"
 
 import { LoginUseCase } from "@/core/application/useCases/LoginUseCase";
+import { RegisterUseCase } from "@/core/application/useCases/RegisterUseCase";
+import { AuthRequest } from "@/core/domain/entities/Auth";
 import { ApiAuthRepository } from "@/core/infrastructure/ApiAuthRepository";
 import { HttpClient } from "@/core/infrastructure/HttpClient";
 import { cookies } from "next/headers";
@@ -31,4 +33,30 @@ export async function loginAction(email: string, password: string) {
 
 	console.log("Login feito")
 	redirect("/summary");
+}
+
+export async function logoutAction() {
+  const cookieStore = await cookies();
+  
+  cookieStore.delete("jwt_token");
+
+  redirect("/login");
+}
+
+
+export async function registerAction(request: AuthRequest) {
+  const httpClient = new HttpClient();
+  
+  const authRepo = new ApiAuthRepository(httpClient);
+  const useCase = new RegisterUseCase(authRepo);
+
+  try {
+    await useCase.execute(request);
+    
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : "Erro ao realizar o cadastro.";
+    return { success: false, error: message };
+  }
 }

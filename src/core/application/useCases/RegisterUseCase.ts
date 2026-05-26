@@ -1,10 +1,10 @@
-import { AuthRequest } from "@/core/domain/entities/Auth";
 import { IAuthRepository } from "@/core/domain/interfaces/IAuthRepository";
+import { AuthRequest } from "@/core/domain/entities/Auth";
 
-export class LoginUseCase {
+export class RegisterUseCase {
   constructor(private readonly authRepository: IAuthRepository) {}
 
-  async execute(request: AuthRequest): Promise<string> {
+  async execute(request: AuthRequest): Promise<void> {
     if (!request.email || !request.email.includes("@")) {
       throw new Error("Formato de e-mail inválido.");
     }
@@ -13,8 +13,6 @@ export class LoginUseCase {
       throw new Error("A senha deve ter pelo menos 6 caracteres.");
     }
 
-    const token = await this.authRepository.login(request);
-
-    return token;
+    await this.authRepository.register(request);
   }
 }

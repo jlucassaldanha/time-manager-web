@@ -1,5 +1,6 @@
 "use client"
 
+import { logoutAction } from "@/actions/AuthActions";
 import { AppBar, Toolbar, Button, Box } from "@mui/material";
 
 export default function NavigationBar() {
@@ -22,6 +23,7 @@ export default function NavigationBar() {
           <Button href="/preferences/workjourney" color="inherit">
             Editar jornada
           </Button>
+          <Button color="inherit" onClick={logoutAction}>Sair</Button>
         </Toolbar>
       </AppBar>
     </Box>
