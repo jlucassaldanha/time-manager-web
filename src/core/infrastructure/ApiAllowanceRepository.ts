@@ -1,0 +1,32 @@
+import { IAllowanceRepository } from "../domain/interfaces/IAllowanceRepository";
+import { AllowanceDto, CreateAllowanceRequest, DeleteAllowanceRequest, UpdateAllowanceRequest } from "../domain/entities/Allowance";
+import { HttpClient } from "./HttpClient";
+
+export class ApiAllowanceRepository implements IAllowanceRepository {
+  constructor(private readonly http: HttpClient) {}
+
+  async get(date: Date): Promise<AllowanceDto | null> {
+    try {
+      return await this.http.get<AllowanceDto>(`/api/allowance?date=${date}`)
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes("Status 404")) {
+        console.log("Nenhum abono encontrado. Retornando null.");
+        return null; 
+      }
+      
+      throw error;
+    }
+  }
+
+  async create(allowance: CreateAllowanceRequest): Promise<void> {
+    await this.http.post("/api/allowance/create", allowance);
+  }
+
+  async update(allowance: UpdateAllowanceRequest): Promise<void> {
+    await this.http.post("/api/allowance/update", allowance);
+  }
+
+  async delete(allowance: DeleteAllowanceRequest): Promise<void> {
+    await this.http.post("/api/allowance/delete", allowance);
+  }
+}

@@ -1,3 +1,4 @@
+import { AllowanceDto } from "./Allowance";
 import { RecordType } from "./TimeRecord";
 
 export type PeriodSummaryRequest = {
@@ -19,6 +20,7 @@ export type DailySummaryResponse = {
 	totalMinutes: number;
 	dailyGoalMinutes: number;
 	balanceMinutes: number;
+	allowanceDetails: AllowanceDto[]
 	punches: PunchDto[]
 }
 

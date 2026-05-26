@@ -11,24 +11,39 @@ export default function useSummaryRecords() {
 
   const [startDate, setStartDate] = useState<string>(initialStartDateString);
   const [endDate, setEndDate] = useState<string>(initialEndDateString);
-  const [records, setRecords] = useState<PeriodSummaryResponse>();
+  const [records, setRecords] = useState<PeriodSummaryResponse | null>();
+
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchRecords = async (start: string, end: string) => {
+    const result = await GetPeriodSummaryAction(start, end);
+    
+    if (!result.success) {
+      setError(result.error || "Erro desconhecido");
+      setRecords(undefined); 
+      return;
+    }
+
+    setError(null);
+    setRecords(result.data);
+    
+  };
 
   useEffect(() => {
     const getRecords = async () => {
-      const value = await GetPeriodSummaryAction(startDate, endDate);
-      setRecords(value);
+      await fetchRecords(startDate, endDate);
     };
 
     getRecords();
   }, []);
 
   const handleGetPeriodClick = async () => {
-    const value = await GetPeriodSummaryAction(startDate, endDate);
-    setRecords(value);
+    await fetchRecords(startDate, endDate);
   };
 
   return {
     records,
+    error,
     startDate,
     endDate,
     setStartDate,

@@ -1,43 +1,30 @@
 import { WorkJourneyResponse, WorkJourneyRule } from "@/core/domain/entities/WorkJourneyRule";
 import { IWorkJourneyRuleRepository } from "@/core/domain/interfaces/IWorkJourneyRuleRepository";
+import { HttpClient } from "./HttpClient";
 
 export class ApiWorkJourneyRuleRepository implements IWorkJourneyRuleRepository {
-  private readonly baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  constructor(private readonly http: HttpClient) {}
 
-  async get(): Promise<WorkJourneyResponse> {
-    const response = await fetch(`${this.baseUrl}/api/workjourneyrule`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+  async get(): Promise<WorkJourneyResponse | null> {
+    try {
+      return await this.http.get<WorkJourneyResponse>(`/api/workjourneyrule`)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
 
-    if (!response.ok) {
-      throw new Error("Falha ao registrar regras.");
+      if (errorMessage.includes("Regra não encontrada") || errorMessage.includes("404")) {
+        console.log("INFO: Regra não encontrada no banco. Convertendo para null.");
+        return null; 
+      }
+      
+      throw error;
     }
-
-    return response.json()
   }
 
   async create(rule: WorkJourneyRule): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/workjourneyrule/create`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(rule),
-    });
-
-    if (!response.ok) {
-      throw new Error("Falha ao registrar regras.");
-    }
+    await this.http.post("/api/workjourneyrule/create", rule);
   }
 
   async update(rule: WorkJourneyRule): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/workjourneyrule/update`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(rule),
-    });
-
-    if (!response.ok) {
-      throw new Error("Falha ao registrar regras.");
-    }
+    await this.http.post("/api/workjourneyrule/update", rule);
   }
 }

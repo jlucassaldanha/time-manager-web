@@ -1,32 +1,43 @@
-import { DailySummaryResponse, PeriodSummaryRequest, PeriodSummaryResponse } from "../domain/entities/Summary";
+import {
+  DailySummaryResponse,
+  PeriodSummaryRequest,
+  PeriodSummaryResponse,
+} from "../domain/entities/Summary";
 import { ISummaryRepository } from "../domain/interfaces/ISummaryRepository";
+import { HttpClient } from "./HttpClient";
 
 export class ApiSummaryRepository implements ISummaryRepository {
-  private readonly baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  constructor(private readonly http: HttpClient) {}
 
-  async getDaily(date: Date): Promise<DailySummaryResponse> {
-    const response = await fetch(`${this.baseUrl}/api/summary/daily?date=${date}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!response.ok) {
-      throw new Error("Falha ao registrar regras.");
+  async getDaily(date: Date): Promise<DailySummaryResponse | null> {
+    try {
+      return await this.http.get<DailySummaryResponse>(
+        `/api/summary/daily?date=${date}`,
+      );
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes("Status 404")) {
+        console.log("Nenhum registro encontrado. Retornando null.");
+        return null; 
+      }
+      
+      throw error;
     }
-
-    return await response.json()
   }
 
-  async getPeriod(request: PeriodSummaryRequest): Promise<PeriodSummaryResponse> {
-    const response = await fetch(`${this.baseUrl}/api/summary/period?StartDate=${request.startDate}&EndDate=${request.endDate}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!response.ok) {
-      throw new Error("Falha ao registrar regras.");
+  async getPeriod(
+    request: PeriodSummaryRequest,
+  ): Promise<PeriodSummaryResponse | null> {
+    try {
+      return await this.http.get<PeriodSummaryResponse>(
+        `/api/summary/period?StartDate=${request.startDate}&EndDate=${request.endDate}`,
+      );
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes("Status 404")) {
+        console.log("Nenhum registro encontrado. Retornando null.");
+        return null; 
+      }
+      
+      throw error;
     }
-    
-    return await response.json()
   }
 }

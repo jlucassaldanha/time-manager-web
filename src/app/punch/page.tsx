@@ -1,15 +1,27 @@
-import {
-  CreateManualPunchAction,
-  CreateRealtimePunchAction,
-} from "@/actions/PunchActions";
-import { CreateWorkJourneyRuleAction } from "@/actions/WorkJourneyRuleActions";
+"use client";
+
+import useRealtimePunch from "@/hooks/useRealtimePunch";
+import { Box, Button, Typography } from "@mui/material";
 
 export default function Home() {
+  const {
+    isPending,
+    error,
+    handleRealtimePunch
+  } = useRealtimePunch()
+
   return (
-    <div>
-      <form action={CreateRealtimePunchAction}>
-        <button type="submit">Bater ponto</button>
-      </form>
-    </div>
+    <Box
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+    >
+      <Button
+        onClick={handleRealtimePunch}
+        variant="contained"
+        disabled={!isPending}
+      >
+        Bater ponto
+      </Button>
+      <Typography color="error">{error}</Typography>
+    </Box>
   );
 }

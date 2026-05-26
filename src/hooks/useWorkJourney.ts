@@ -1,7 +1,3 @@
-"use client";
-
-import { RecordType } from "@/core/domain/entities/TimeRecord";
-import WorkJourneyCard from "@/components/WorkJourneyCard/WorkJourneyCard";
 import {
   CreateWorkJourneyRuleAction,
   GetWorkJourneyRuleAction,
@@ -13,32 +9,16 @@ import {
 } from "@/core/domain/entities/WorkJourneyRule";
 import { useEffect, useState } from "react";
 
-export interface PunchEntry {
-  id: string;
-  time: string;
-  type: RecordType;
-  note?: string;
-}
-
-const emptyRule: WorkJourneyResponse = {
-  monday: "",
-  tuesday: "",
-  wednesday: "",
-  thursday: "",
-  friday: "",
-  saturday: "",
-  sunday: "",
-};
-
-export default function TestPage() {
+export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
   const [journeys, setJourneys] = useState<WorkJourneyResponse>(emptyRule);
+
   useEffect(() => {
     const fetchRule = async () => {
       try {
         const existingRule = await GetWorkJourneyRuleAction();
 
-        if (existingRule) {
-          setJourneys(existingRule);
+        if (existingRule.data) {
+          setJourneys(existingRule.data);
         }
       } catch (error) {
         console.error("Erro ao buscar a jornada", error);
@@ -64,11 +44,9 @@ export default function TestPage() {
     }
   };
 
-  return (
-    <WorkJourneyCard
-      journeys={journeys}
-      onUpdateJourneyDay={updateJourneyDay}
-      onSave={handleSave}
-    />
-  );
+  return {
+	journeys,
+	updateJourneyDay,
+	handleSave
+  }
 }
