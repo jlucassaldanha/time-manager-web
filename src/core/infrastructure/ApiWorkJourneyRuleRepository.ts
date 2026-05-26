@@ -1,55 +1,19 @@
 import { WorkJourneyResponse, WorkJourneyRule } from "@/core/domain/entities/WorkJourneyRule";
 import { IWorkJourneyRuleRepository } from "@/core/domain/interfaces/IWorkJourneyRuleRepository";
+import { HttpClient } from "./HttpClient";
 
 export class ApiWorkJourneyRuleRepository implements IWorkJourneyRuleRepository {
-  private readonly baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  constructor(private readonly http: HttpClient) {}
 
   async get(): Promise<WorkJourneyResponse> {
-    const response = await fetch(`${this.baseUrl}/api/workjourneyrule`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text(); 
-      
-      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
-      
-      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
-    }
-
-    return response.json()
+    return await this.http.get<WorkJourneyResponse>(`/api/workjourneyrule`)
   }
 
   async create(rule: WorkJourneyRule): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/workjourneyrule/create`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(rule),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text(); 
-      
-      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
-      
-      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
-    }
+    await this.http.post("/api/workjourneyrule/create", rule);
   }
 
   async update(rule: WorkJourneyRule): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/workjourneyrule/update`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(rule),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text(); 
-      
-      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
-      
-      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
-    }
+    await this.http.post("/api/workjourneyrule/update", rule);
   }
 }

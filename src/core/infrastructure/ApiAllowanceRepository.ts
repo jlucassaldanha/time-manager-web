@@ -1,76 +1,27 @@
 import { IAllowanceRepository } from "../domain/interfaces/IAllowanceRepository";
 import { AllowanceDto, CreateAllowanceRequest, DeleteAllowanceRequest, UpdateAllowanceRequest } from "../domain/entities/Allowance";
+import { HttpClient } from "./HttpClient";
 
 export class ApiAllowanceRepository implements IAllowanceRepository {
-  private readonly baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  constructor(private readonly http: HttpClient) {}
 
   async get(date: Date): Promise<AllowanceDto | null> {
-      const response = await fetch(`${this.baseUrl}/api/allowance?date=${date}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-  
-      if (response.status === 404) {
-        console.log("Nenhum registro encontrado no banco. Retornando estado vazio.");
-        return null; 
-      }
-  
-      if (!response.ok) {
-       const errorBody = await response.text(); 
-        
-        console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
-        
-        throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
-      }
-  
-      return await response.json()
+    try {
+      return await this.http.get<AllowanceDto>(`/api/allowance?date=${date}`)
+    } catch (_) {
+      return null
     }
+  }
 
   async create(allowance: CreateAllowanceRequest): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/allowance/create`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(allowance),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text(); 
-      
-      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
-      
-      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
-    }
+    await this.http.post("/api/allowance/create", allowance);
   }
 
   async update(allowance: UpdateAllowanceRequest): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/allowance/update`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(allowance),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text(); 
-      
-      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
-      
-      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
-    }
+    await this.http.post("/api/allowance/update", allowance);
   }
 
   async delete(allowance: DeleteAllowanceRequest): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/api/allowance/delete`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(allowance),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text(); 
-      
-      console.error(`[Erro na API C#] Status: ${response.status} | Detalhes:`, errorBody);
-      
-      throw new Error(`Recusado pelo servidor (Status ${response.status}).`);
-    }
+    await this.http.post("/api/allowance/delete", allowance);
   }
 }
