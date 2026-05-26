@@ -15,7 +15,7 @@ export default function WorkJourney() {
     sunday: "",
   };
 
-  const { journeys, updateJourneyDay, handleSave } = useWorkJourney(emptyRule);
+  const { journeys, error, updateJourneyDay, handleSave } = useWorkJourney(emptyRule);
 
   return (
     <WorkJourneyCard

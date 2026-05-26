@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
   const [journeys, setJourneys] = useState<WorkJourneyResponse>(emptyRule);
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchRule = async () => {
@@ -19,6 +20,11 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
 
         if (existingRule.data) {
           setJourneys(existingRule.data);
+          setError(null)
+        }
+
+        if (existingRule.error) {
+          setError(existingRule.error)
         }
       } catch (error) {
         console.error("Erro ao buscar a jornada", error);
@@ -35,9 +41,21 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
   const handleSave = async () => {
     try {
       if (journeys.id) {
-        await UpdateWorkJourneyRuleAction(journeys);
+        const response = await UpdateWorkJourneyRuleAction(journeys);
+
+        if (response?.error) {
+          setError(response.error)
+        } else {
+          setError(null)
+        }
       } else {
-        await CreateWorkJourneyRuleAction(journeys);
+        const response = await CreateWorkJourneyRuleAction(journeys);
+
+        if (response?.error) {
+          setError(response.error)
+        } else {
+          setError(null)
+        }
       }
     } catch (error) {
       console.error("Erro ao salvar", error);
@@ -46,6 +64,7 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
 
   return {
 	journeys,
+  error,
 	updateJourneyDay,
 	handleSave
   }
