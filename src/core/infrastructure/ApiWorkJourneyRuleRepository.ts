@@ -5,8 +5,19 @@ import { HttpClient } from "./HttpClient";
 export class ApiWorkJourneyRuleRepository implements IWorkJourneyRuleRepository {
   constructor(private readonly http: HttpClient) {}
 
-  async get(): Promise<WorkJourneyResponse> {
-    return await this.http.get<WorkJourneyResponse>(`/api/workjourneyrule`)
+  async get(): Promise<WorkJourneyResponse | null> {
+    try {
+      return await this.http.get<WorkJourneyResponse>(`/api/workjourneyrule`)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      if (errorMessage.includes("Regra não encontrada") || errorMessage.includes("404")) {
+        console.log("INFO: Regra não encontrada no banco. Convertendo para null.");
+        return null; 
+      }
+      
+      throw error;
+    }
   }
 
   async create(rule: WorkJourneyRule): Promise<void> {

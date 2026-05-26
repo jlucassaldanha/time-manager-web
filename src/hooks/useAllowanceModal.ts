@@ -8,7 +8,7 @@ import { AllowanceDto } from "@/core/domain/entities/Allowance";
 import { PeriodSummaryResponse } from "@/core/domain/entities/Summary";
 import { formatToBrDateString } from "@/utils/formatToBrDateString";
 
-export default function useAllowanceModal(records: PeriodSummaryResponse | undefined, onSuccessRefresh: () => void) {
+export default function useAllowanceModal(records: PeriodSummaryResponse | undefined | null, onSuccessRefresh: () => void) {
   const [allowanceEditingDate, setAllowanceEditingDate] = useState<
     string | null
   >(null);

@@ -8,8 +8,13 @@ export class ApiAllowanceRepository implements IAllowanceRepository {
   async get(date: Date): Promise<AllowanceDto | null> {
     try {
       return await this.http.get<AllowanceDto>(`/api/allowance?date=${date}`)
-    } catch (_) {
-      return null
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes("Status 404")) {
+        console.log("Nenhum abono encontrado. Retornando null.");
+        return null; 
+      }
+      
+      throw error;
     }
   }
 

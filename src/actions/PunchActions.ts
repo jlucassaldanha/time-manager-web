@@ -7,16 +7,27 @@ import { ApiTimeRecordRepository } from "@/core/infrastructure/ApiTimeRecordRepo
 import { UpdatePunchUseCase } from "../core/application/useCases/UpdatePunchUseCase";
 import { DeletePunchUseCase } from "../core/application/useCases/DeletePunchUseCase";
 import parseBrDateToIsoWithOffset from "@/utils/parseBrDateToIsoWithOffset";
+import { HttpClient } from "@/core/infrastructure/HttpClient";
+import { cookies } from "next/headers";
 
 export async function CreateRealtimePunchAction() {
-  const repository = new ApiTimeRecordRepository();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    throw new Error("Sessão expirada. Faça login novamente.");
+  }
+
+  const httpClient = new HttpClient(token)
+  const repository = new ApiTimeRecordRepository(httpClient);
   const createUseCase = new CreateRealtimePunchUseCase(repository);
 
   try {
     await createUseCase.execute();
   } catch (error) {
     console.error(error);
-    throw new Error("Erro ao processar o registro.");
+    const message = error instanceof Error ? error.message : "Erro interno no servidor.";
+    return { success: false, error: message };
   }
 }
 
@@ -31,14 +42,22 @@ export async function CreateManualPunchAction(
   const datetime = new Date(rawDatetime);
 
   if (isNaN(datetime.getTime())) {
-    throw new Error("Formato de data e hora inválido.");
+    return { success: false, error: "Formato de data e hora inválido." };
   }
 
   if (type !== "Entry" && type !== "Exit") {
-    throw new Error("Tipo errado");
+    return { success: false, error: "Tipo errado" };
   }
 
-  const repository = new ApiTimeRecordRepository();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    return { success: false, error: "Usuário não autenticado." };
+  }
+
+  const httpClient = new HttpClient(token)
+  const repository = new ApiTimeRecordRepository(httpClient);
   const createUseCase = new CreateManualPunchUseCase(repository);
 
   try {
@@ -49,7 +68,8 @@ export async function CreateManualPunchAction(
     });
   } catch (error) {
     console.error(error);
-    throw new Error("Erro ao processar o registro.");
+    const message = error instanceof Error ? error.message : "Erro interno no servidor.";
+    return { success: false, error: message };
   }
 }
 
@@ -65,14 +85,22 @@ export async function UpdatePunchAction(
   const datetime = new Date(rawDatetime);
 
   if (isNaN(datetime.getTime())) {
-    throw new Error("Formato de data e hora inválido.");
+    return { success: false, error: "Formato de data e hora inválido." };
   }
 
   if (type !== "Entry" && type !== "Exit") {
-    throw new Error("Tipo errado");
+    return { success: false, error: "Tipo errado" };
+  }
+  
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    return { success: false, error: "Usuário não autenticado." };
   }
 
-  const repository = new ApiTimeRecordRepository();
+  const httpClient = new HttpClient(token)
+  const repository = new ApiTimeRecordRepository(httpClient);
   const updateUseCase = new UpdatePunchUseCase(repository);
 
   try {
@@ -84,7 +112,8 @@ export async function UpdatePunchAction(
     });
   } catch (error) {
     console.error(error);
-    throw new Error("Erro ao processar o registro.");
+    const message = error instanceof Error ? error.message : "Erro interno no servidor.";
+    return { success: false, error: message };
   }
 }
 
@@ -92,7 +121,15 @@ export async function DeletePunchAction(
   recordId: string,
   justification: string,
 ) {
-  const repository = new ApiTimeRecordRepository();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    return { success: false, error: "Usuário não autenticado." };
+  }
+
+  const httpClient = new HttpClient(token)
+  const repository = new ApiTimeRecordRepository(httpClient);
   const deleteUseCase = new DeletePunchUseCase(repository);
 
   try {
@@ -102,6 +139,7 @@ export async function DeletePunchAction(
     });
   } catch (error) {
     console.error(error);
-    throw new Error("Erro ao processar o registro.");
+    const message = error instanceof Error ? error.message : "Erro interno no servidor.";
+    return { success: false, error: message };
   }
 }

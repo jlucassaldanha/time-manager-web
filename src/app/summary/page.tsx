@@ -1,7 +1,7 @@
 "use client";
 
 import PeriodController from "@/components/PeriodController/PeriodController";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Alert, AlertTitle, Button } from "@mui/material";
 import DailyAccordion from "@/components/DailyAccordion/DailyAccordion";
 import PeriodCard from "@/components/PeriodCard/PeriodCard";
 import DynamicPunchModal from "@/components/DynamicPunchModal/DynamicPunchModal";
@@ -13,6 +13,7 @@ import AllowanceModal from "@/components/AllowanceModal/AllowanceModal";
 export default function Summary() {
   const {
     records,
+    error,
     startDate,
     endDate,
     setStartDate,
@@ -68,6 +69,20 @@ export default function Summary() {
           )
         })}
       </Box>
+
+      {error === "User need journey rules" && (
+        <Alert 
+          severity="warning" 
+          action={
+            <Button color="inherit" size="small" href="/preferences/workjourney">
+              CONFIGURAR
+            </Button>
+          }
+        >
+          <AlertTitle>Ação Necessária</AlertTitle>
+          Você precisa configurar sua jornada de trabalho.
+        </Alert>
+      )}
 
       {!records && (
         <Typography variant="h6">Nenhum registro para esse periodo.</Typography>

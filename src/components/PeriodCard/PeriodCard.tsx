@@ -3,7 +3,7 @@ import { formatMinutesToHoursString } from "@/utils/formatMinutesToHoursString";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 
 interface PeriodCardProps {
-  period?: PeriodSummaryResponse;
+  period?: PeriodSummaryResponse | null;
 }
 
 export default function PeriodCard({ period }: PeriodCardProps) {

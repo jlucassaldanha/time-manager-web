@@ -21,8 +21,8 @@ export default function WorkJourney() {
         try {
           const existingRule = await GetWorkJourneyRuleAction();
   
-          if (existingRule) {
-            setJourneys(existingRule);
+          if (existingRule.data) {
+            setJourneys(existingRule.data);
           }
         } catch (error) {
           console.error("Erro ao buscar a jornada", error);

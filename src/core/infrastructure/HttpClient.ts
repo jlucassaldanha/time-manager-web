@@ -21,7 +21,16 @@ export class HttpClient {
 		if (!response.ok) {
 			const errorBody = await response.text()
 			console.error(`[Erro na API C#] Caminho: ${path} | Status: ${response.status} | Detalhes:`, errorBody);
-      		throw new Error(`Erro na requisição (Status ${response.status}).`);
+
+			let errorMessage = `Erro na requisição (Status ${response.status}).`;
+
+      		try {
+				const parsed = JSON.parse(errorBody);
+				if (parsed.error) errorMessage = parsed.error;
+				else if (parsed.message) errorMessage = parsed.message; 
+			} catch { }
+
+			throw new Error(errorMessage);
 		}
 
 		if (response.status === 204 || response.headers.get("content-length") === "0") {

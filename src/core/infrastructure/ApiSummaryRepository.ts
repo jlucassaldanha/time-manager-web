@@ -14,8 +14,13 @@ export class ApiSummaryRepository implements ISummaryRepository {
       return await this.http.get<DailySummaryResponse>(
         `/api/summary/daily?date=${date}`,
       );
-    } catch (_) {
-      return null;
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes("Status 404")) {
+        console.log("Nenhum registro encontrado. Retornando null.");
+        return null; 
+      }
+      
+      throw error;
     }
   }
 
@@ -26,8 +31,13 @@ export class ApiSummaryRepository implements ISummaryRepository {
       return await this.http.get<PeriodSummaryResponse>(
         `/api/summary/period?StartDate=${request.startDate}&EndDate=${request.endDate}`,
       );
-    } catch (_) {
-      return null;
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes("Status 404")) {
+        console.log("Nenhum registro encontrado. Retornando null.");
+        return null; 
+      }
+      
+      throw error;
     }
   }
 }

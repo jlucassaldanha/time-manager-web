@@ -10,7 +10,7 @@ import {
 } from "@/actions/PunchActions";
 
 export default function useDynamicPunchModal(
-  records: PeriodSummaryResponse | undefined,
+  records: PeriodSummaryResponse | undefined | null,
   onSuccessRefresh: () => void,
 ) {
   const [editingDate, setEditingDate] = useState<string | null>(null);

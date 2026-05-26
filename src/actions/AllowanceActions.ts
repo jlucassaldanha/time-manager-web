@@ -5,13 +5,23 @@ import { DeleteAllowanceUseCase } from "@/core/application/useCases/DeleteAllowa
 import { UpdateAllowanceUseCase } from "@/core/application/useCases/UpdateAllowanceUseCase";
 import { AllowanceDto } from "@/core/domain/entities/Allowance";
 import { ApiAllowanceRepository } from "@/core/infrastructure/ApiAllowanceRepository";
+import { HttpClient } from "@/core/infrastructure/HttpClient";
 import formatBrDateToIsoDateString from "@/utils/formatBrDateToIsoDateString";
+import { cookies } from "next/headers";
 
 export async function CreateAllowanceAction(
   date: string,
   allowance: AllowanceDto,
 ) {
-  const repository = new ApiAllowanceRepository();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    return { success: false, error: "Usuário não autenticado." };
+  }
+
+  const httpClient = new HttpClient(token)
+  const repository = new ApiAllowanceRepository(httpClient);
   const createUseCase = new CreateAllowanceUseCase(repository);
 
   const isoDate = formatBrDateToIsoDateString(date)
@@ -24,7 +34,8 @@ export async function CreateAllowanceAction(
     });
   } catch (error) {
     console.error(error);
-    throw new Error("Erro ao processar o registro.");
+    const message = error instanceof Error ? error.message : "Erro interno no servidor.";
+    return { success: false, error: message };
   }
 }
 
@@ -33,7 +44,15 @@ export async function UpdateAllowanceAction(
   allowance: AllowanceDto,
   auditJustification: string,
 ) {
-  const repository = new ApiAllowanceRepository();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    return { success: false, error: "Usuário não autenticado." };
+  }
+
+  const httpClient = new HttpClient(token)
+  const repository = new ApiAllowanceRepository(httpClient);
   const updateUseCase = new UpdateAllowanceUseCase(repository);
 
   if (!allowance.id) {
@@ -52,7 +71,8 @@ export async function UpdateAllowanceAction(
     });
   } catch (error) {
     console.error(error);
-    throw new Error("Erro ao processar o registro.");
+    const message = error instanceof Error ? error.message : "Erro interno no servidor.";
+    return { success: false, error: message };
   }
 }
 
@@ -60,7 +80,15 @@ export async function DeleteAllowanceAction(
   id: string,
   auditJustification: string,
 ) {
-  const repository = new ApiAllowanceRepository();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    return { success: false, error: "Usuário não autenticado." };
+  }
+
+  const httpClient = new HttpClient(token)
+  const repository = new ApiAllowanceRepository(httpClient);
   const deleteUseCase = new DeleteAllowanceUseCase(repository);
 
   try {
@@ -70,6 +98,7 @@ export async function DeleteAllowanceAction(
     });
   } catch (error) {
     console.error(error);
-    throw new Error("Erro ao processar o registro.");
+    const message = error instanceof Error ? error.message : "Erro interno no servidor.";
+    return { success: false, error: message };
   }
 }

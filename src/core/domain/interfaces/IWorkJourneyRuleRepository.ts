@@ -2,7 +2,7 @@ import { WorkJourneyResponse, WorkJourneyRule } from "../entities/WorkJourneyRul
 
 
 export interface IWorkJourneyRuleRepository {
-	get(): Promise<WorkJourneyResponse>
+	get(): Promise<WorkJourneyResponse | null>
 	create(rule: WorkJourneyRule): Promise<void>
 	update(rule: WorkJourneyRule): Promise<void>
 }
