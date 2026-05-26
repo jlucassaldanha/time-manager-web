@@ -1,25 +1,17 @@
 "use client"
 
-import { loginAction } from "@/actions/AuthActions";
+import useLogin from "@/hooks/useLogin";
 import { Box, Button, TextField } from "@mui/material";
 import { redirect } from "next/navigation";
-import { useState } from "react";
 
 export default function Login() {
-	const [email, setEmail] = useState("")
-	const [password, setPassword] = useState("")
-
-	const handleEmailChange = (email: string) => {
-		setEmail(email)
-	}
-
-	const handlePasswordChange = (password: string) => {
-		setPassword(password)
-	}
-
-	const handleLogin = async () => {
-		await loginAction(email, password)
-	}
+	const {
+    email,
+    password,
+    handleEmailChange,
+    handlePasswordChange,
+    handleLogin
+  } = useLogin()
 
   return (
     <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, mt: 15}}>
