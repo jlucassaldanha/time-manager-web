@@ -15,7 +15,7 @@ export async function CreateRealtimePunchAction() {
   const token = cookieStore.get("jwt_token")?.value;
 
   if (!token) {
-    throw new Error("Sessão expirada. Faça login novamente.");
+    return { success: false, error: "Usuário não autenticado." };
   }
 
   const httpClient = new HttpClient(token)
@@ -24,6 +24,7 @@ export async function CreateRealtimePunchAction() {
 
   try {
     await createUseCase.execute();
+    return { success: true };
   } catch (error) {
     console.error(error);
     const message = error instanceof Error ? error.message : "Erro interno no servidor.";

@@ -3,6 +3,7 @@
 import WorkJourneyCard from "@/components/WorkJourneyCard/WorkJourneyCard";
 import { WorkJourneyResponse } from "@/core/domain/entities/WorkJourneyRule";
 import useWorkJourney from "@/hooks/useWorkJourney";
+import { Box, Typography } from "@mui/material";
 
 export default function WorkJourney() {
   const emptyRule: WorkJourneyResponse = {
@@ -15,13 +16,21 @@ export default function WorkJourney() {
     sunday: "",
   };
 
-  const { journeys, error, updateJourneyDay, handleSave } = useWorkJourney(emptyRule);
+  const { journeys, error, loading, updateJourneyDay, handleSave } =
+    useWorkJourney(emptyRule);
 
   return (
-    <WorkJourneyCard
-      journeys={journeys}
-      onUpdateJourneyDay={updateJourneyDay}
-      onSave={handleSave}
-    />
+    <Box>
+      {error && <Typography color="error">{error}</Typography>}
+      {!loading ? (
+        <WorkJourneyCard
+        journeys={journeys}
+        onUpdateJourneyDay={updateJourneyDay}
+        onSave={handleSave}
+      />
+      ) : (
+        <Typography>Carregando...</Typography>
+      )}
+    </Box>
   );
 }

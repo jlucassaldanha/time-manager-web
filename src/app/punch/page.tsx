@@ -17,7 +17,7 @@ export default function Home() {
       <Button
         onClick={handleRealtimePunch}
         variant="contained"
-        disabled={!isPending}
+        disabled={isPending}
       >
         Bater ponto
       </Button>
