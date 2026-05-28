@@ -23,7 +23,7 @@ export default function DynamicPunchCard({
     useDynamicPunches(initialData);
 
   return (
-    <Box>
+    <Box component="form" action={() => onSave(deletedIds, punches)}>
       <Box
         sx={{
           display: "flex",
@@ -97,7 +97,7 @@ export default function DynamicPunchCard({
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Button onClick={addPunch}>Adicionar batida</Button>
-        <Button variant="contained" onClick={() => onSave(deletedIds, punches)}>
+        <Button variant="contained" type="submit">
           Salvar alterações
         </Button>
       </Box>

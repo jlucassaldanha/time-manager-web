@@ -14,8 +14,10 @@ export default function useSummaryRecords() {
   const [records, setRecords] = useState<PeriodSummaryResponse | null>();
 
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true)
 
   const fetchRecords = async (start: string, end: string) => {
+    setLoading(true)
     const result = await GetPeriodSummaryAction(start, end);
     
     if (!result.success) {
@@ -26,7 +28,7 @@ export default function useSummaryRecords() {
 
     setError(null);
     setRecords(result.data);
-    
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -44,6 +46,7 @@ export default function useSummaryRecords() {
   return {
     records,
     error,
+    loading,
     startDate,
     endDate,
     setStartDate,

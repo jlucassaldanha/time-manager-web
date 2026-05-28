@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 
 export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
   const [journeys, setJourneys] = useState<WorkJourneyResponse>(emptyRule);
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchRule = async () => {
@@ -19,12 +21,19 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
 
         if (existingRule.data) {
           setJourneys(existingRule.data);
+          setError(null)
+        }
+
+        if (existingRule.error) {
+          setError(existingRule.error)
         }
       } catch (error) {
         console.error("Erro ao buscar a jornada", error);
+      } finally {
+        setLoading(false)
       }
     };
-
+    
     fetchRule();
   }, []);
 
@@ -33,12 +42,26 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
   };
 
   const handleSave = async () => {
+    setLoading(true)
     try {
       if (journeys.id) {
-        await UpdateWorkJourneyRuleAction(journeys);
+        const response = await UpdateWorkJourneyRuleAction(journeys);
+
+        if (response?.error) {
+          setError(response.error)
+        } else {
+          setError(null)
+        }
       } else {
-        await CreateWorkJourneyRuleAction(journeys);
+        const response = await CreateWorkJourneyRuleAction(journeys);
+
+        if (response?.error) {
+          setError(response.error)
+        } else {
+          setError(null)
+        }
       }
+      setLoading(false)
     } catch (error) {
       console.error("Erro ao salvar", error);
     }
@@ -46,6 +69,8 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
 
   return {
 	journeys,
+  error,
+  loading,
 	updateJourneyDay,
 	handleSave
   }

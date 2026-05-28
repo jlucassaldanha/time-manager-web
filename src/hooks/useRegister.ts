@@ -8,6 +8,7 @@ export default function useRegister() {
 	const [password, setPassword] = useState<string>("")
 	const [confirmPassword, setConfirmPassword] = useState<string>("")
 	const [error, setError] = useState<string | null>(null)
+	const [loading, setLoading] = useState<boolean>(false)
 
 	const handleEmailChange = (email: string) => {
 		setEmail(email)
@@ -22,6 +23,7 @@ export default function useRegister() {
 	}
 
 	const handleRegister = async () => {
+		setLoading(true)
 		if (confirmPassword === password && (email.length > 0 && password.length > 0)) {
 			const response = await registerAction({ email, password })
 
@@ -35,6 +37,7 @@ export default function useRegister() {
 				setError(response.error)
 			}
 		}
+		setLoading(false)
 	}
 
 	return {
@@ -42,6 +45,7 @@ export default function useRegister() {
 		password,
 		confirmPassword,
 		error,
+		loading,
 		handleEmailChange,
 		handlePasswordChange,
 		handleConfirmPasswordChange,
