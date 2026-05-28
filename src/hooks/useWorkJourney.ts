@@ -16,7 +16,6 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
 
   useEffect(() => {
     const fetchRule = async () => {
-      setLoading(true)
       try {
         const existingRule = await GetWorkJourneyRuleAction();
 
@@ -34,7 +33,7 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
         setLoading(false)
       }
     };
-
+    
     fetchRule();
   }, []);
 
@@ -62,10 +61,9 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
           setError(null)
         }
       }
+      setLoading(false)
     } catch (error) {
       console.error("Erro ao salvar", error);
-    } finally {
-      setLoading(false)
     }
   };
 

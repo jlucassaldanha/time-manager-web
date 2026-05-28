@@ -19,6 +19,8 @@ export default function Register() {
 
   return (
     <Box
+      component="form"
+      action={handleRegister}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -68,7 +70,7 @@ export default function Register() {
       )}
       {error && <Typography color="error">{error}</Typography>}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Button variant="contained" onClick={handleRegister} loading={loading}>
+        <Button variant="contained" type="submit" loading={loading}>
           Cadastrar
         </Button>
         <Button variant="contained" onClick={() => redirect("/login")}>

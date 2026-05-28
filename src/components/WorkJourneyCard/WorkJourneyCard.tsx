@@ -17,7 +17,7 @@ export default function WorkJourneyCard({
   onSave,
 }: WorkJourneyCardProps) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+    <Box component="form" action={() => onSave(journeys)} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       {loading ? (
         <Typography>Carregando...</Typography>
       ) : (
@@ -116,7 +116,7 @@ export default function WorkJourneyCard({
       )}
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" onClick={() => onSave(journeys)} disabled={loading}>
+        <Button variant="contained" type="submit" disabled={loading}>
           Salvar alterações
         </Button>
       </Box>

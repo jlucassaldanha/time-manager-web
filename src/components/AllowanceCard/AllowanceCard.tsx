@@ -23,7 +23,7 @@ export default function AllowanceCard({
     useDynamicAllowances(initialData || []);
 
   return (
-    <Box>
+    <Box component="form" action={() => onSave(deletedIds, allowances)}>
       <Box
         sx={{
           display: "flex",
@@ -92,7 +92,7 @@ export default function AllowanceCard({
         <Button variant="outlined" onClick={addAllowance}>
           Adicionar Abono
         </Button>
-        <Button variant="contained" onClick={() => onSave(deletedIds, allowances)}>
+        <Button variant="contained" type="submit">
           Salvar alterações
         </Button>
       </Box>
