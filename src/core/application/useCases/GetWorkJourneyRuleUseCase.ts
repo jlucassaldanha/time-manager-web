@@ -6,7 +6,7 @@ export class GetWorkJourneyRuleUseCase {
 	private readonly ruleRepository: IWorkJourneyRuleRepository,
   ) {}
 
-  async execute(): Promise<WorkJourneyResponse> {
+  async execute(): Promise<WorkJourneyResponse | null> {
 	return await this.ruleRepository.get();
   }
 }
