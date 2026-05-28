@@ -51,6 +51,7 @@ export default function Summary() {
         onEndDateChange={setEndDate}
         startDateValue={startDate}
         endDateValue={endDate}
+        loading={loading}
       />
 
       {loading ? (

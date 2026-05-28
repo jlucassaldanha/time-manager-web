@@ -9,6 +9,7 @@ export default function Login() {
     email,
     password,
     error,
+    loading,
     handleEmailChange,
     handlePasswordChange,
     handleLogin
@@ -42,7 +43,7 @@ export default function Login() {
       </Box>
       {error && <Typography color="error" >{error}</Typography>}
       <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
-        <Button variant="contained" onClick={handleLogin}>Entrar</Button>
+        <Button variant="contained" onClick={handleLogin} loading={loading} >Entrar</Button>
         <Button variant="contained" onClick={() => redirect("/register")}>Cadastrar</Button>
       </Box>
     </Box>

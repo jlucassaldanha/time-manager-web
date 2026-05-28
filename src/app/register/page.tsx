@@ -10,6 +10,7 @@ export default function Register() {
     password,
     confirmPassword,
     error,
+    loading,
     handleEmailChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
@@ -67,7 +68,7 @@ export default function Register() {
       )}
       {error && <Typography color="error">{error}</Typography>}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Button variant="contained" onClick={handleRegister}>
+        <Button variant="contained" onClick={handleRegister} loading={loading}>
           Cadastrar
         </Button>
         <Button variant="contained" onClick={() => redirect("/login")}>

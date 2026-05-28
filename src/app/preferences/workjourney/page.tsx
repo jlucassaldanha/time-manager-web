@@ -22,15 +22,14 @@ export default function WorkJourney() {
   return (
     <Box>
       {error && <Typography color="error">{error}</Typography>}
-      {!loading ? (
-        <WorkJourneyCard
+      
+      <WorkJourneyCard
         journeys={journeys}
         onUpdateJourneyDay={updateJourneyDay}
         onSave={handleSave}
+        loading={loading}
       />
-      ) : (
-        <Typography>Carregando...</Typography>
-      )}
+      
     </Box>
   );
 }

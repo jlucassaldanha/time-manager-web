@@ -6,6 +6,7 @@ interface PeriodControllerProps {
   onEndDateChange: (date: string) => void;
   startDateValue: string;
   endDateValue: string;
+  loading: boolean
 }
 
 export default function PeriodController({
@@ -14,6 +15,7 @@ export default function PeriodController({
   onEndDateChange,
   startDateValue,
   endDateValue,
+  loading
 }: PeriodControllerProps) {
   return (
     <Box
@@ -49,7 +51,7 @@ export default function PeriodController({
           },
         }}
       />
-      <Button variant="contained" onClick={onClick}>
+      <Button variant="contained" onClick={onClick} disabled={loading}>
         Filtrar
       </Button>
     </Box>
