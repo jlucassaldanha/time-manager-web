@@ -1,26 +1,20 @@
 "use client";
 
-import useRegister from "@/hooks/useRegister";
+import { registerAction } from "@/actions/AuthActions";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
+import { useActionState } from "react";
 
+const initialState = { error: undefined }
+
+// necessario devolver dados ao cliente apos erro (progressive enhancement)
 export default function Register() {
-  const {
-    email,
-    password,
-    confirmPassword,
-    error,
-    loading,
-    handleEmailChange,
-    handlePasswordChange,
-    handleConfirmPasswordChange,
-    handleRegister,
-  } = useRegister();
+  const [state, formAction, isPending] = useActionState(registerAction, initialState)
 
   return (
     <Box
       component="form"
-      action={handleRegister}
+      action={formAction}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -32,10 +26,9 @@ export default function Register() {
     >
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <TextField
+        name="email"
           label="Email"
           type="text"
-          value={email}
-          onChange={(e) => handleEmailChange(e.target.value)}
           slotProps={{
             inputLabel: {
               shrink: true,
@@ -43,10 +36,9 @@ export default function Register() {
           }}
         />
         <TextField
+        name="password"
           label="Senha"
           type="password"
-          value={password}
-          onChange={(e) => handlePasswordChange(e.target.value)}
           slotProps={{
             inputLabel: {
               shrink: true,
@@ -54,10 +46,9 @@ export default function Register() {
           }}
         />
         <TextField
+        name="confirmPassword"
           label="Confirmar Senha"
           type="password"
-          value={confirmPassword}
-          onChange={(e) => handleConfirmPasswordChange(e.target.value)}
           slotProps={{
             inputLabel: {
               shrink: true,
@@ -65,12 +56,9 @@ export default function Register() {
           }}
         />
       </Box>
-      {confirmPassword !== password && (
-        <Typography color="error">Senhas diferentes</Typography>
-      )}
-      {error && <Typography color="error">{error}</Typography>}
+      {state?.error && <Typography color="error">{state.error}</Typography>}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Button variant="contained" type="submit" loading={loading}>
+        <Button variant="contained" type="submit" loading={isPending}>
           Cadastrar
         </Button>
         <Button variant="contained" onClick={() => redirect("/login")}>

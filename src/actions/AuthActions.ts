@@ -1,18 +1,23 @@
 "use server"
 
-import { LoginUseCase } from "@/core/application/useCases/LoginUseCase";
 import { RegisterUseCase } from "@/core/application/useCases/RegisterUseCase";
 import { AuthRequest } from "@/core/domain/entities/Auth";
+import { makeLoginUseCase, makeRegisterUseCase } from "@/core/factories/makeAuthUseCase";
 import { ApiAuthRepository } from "@/core/infrastructure/ApiAuthRepository";
 import { HttpClient } from "@/core/infrastructure/HttpClient";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function loginAction(email: string, password: string) {
-	const httpClient = new HttpClient()
-	const authRepo = new ApiAuthRepository(httpClient)
+type FormState = {
+  success?: boolean
+  error?: string; // O "?" torna a string opcional (podendo ser undefined)
+};
+
+export async function loginAction(prevState: FormState, formData: FormData): Promise<FormState> {
+	const email = formData.get("email") as string
+	const password = formData.get("password") as string
 	
-	const loginUseCase = new LoginUseCase(authRepo)
+	const loginUseCase = makeLoginUseCase()
 
 	try {
 		const token = await loginUseCase.execute({ email, password })
@@ -31,27 +36,29 @@ export async function loginAction(email: string, password: string) {
 		return { error: error instanceof Error ? error.message : "Erro interno no servidor." };
 	}
 
-	console.log("Login feito")
 	redirect("/summary");
 }
 
 export async function logoutAction() {
   const cookieStore = await cookies();
-  
   cookieStore.delete("jwt_token");
-
   redirect("/login");
 }
 
 
-export async function registerAction(request: AuthRequest) {
-  const httpClient = new HttpClient();
-  
-  const authRepo = new ApiAuthRepository(httpClient);
-  const useCase = new RegisterUseCase(authRepo);
+export async function registerAction(prevState: FormState, formData: FormData): Promise<FormState> {
+	const email = formData.get("email") as string
+	const password = formData.get("password") as string
+	const confirmPassword = formData.get("confirmPassword") as string
+
+	if (password !== confirmPassword) {
+		return { success: false, error: "Senhas diferentes" }
+	}
+
+	const registerUseCase = makeRegisterUseCase()
 
   try {
-    await useCase.execute(request);
+    await registerUseCase.execute({ email, password });
     
     return { success: true };
   } catch (error) {
