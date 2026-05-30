@@ -1,10 +1,6 @@
 "use server"
 
-import { RegisterUseCase } from "@/core/application/useCases/RegisterUseCase";
-import { AuthRequest } from "@/core/domain/entities/Auth";
 import { makeLoginUseCase, makeRegisterUseCase } from "@/core/factories/makeAuthUseCase";
-import { ApiAuthRepository } from "@/core/infrastructure/ApiAuthRepository";
-import { HttpClient } from "@/core/infrastructure/HttpClient";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

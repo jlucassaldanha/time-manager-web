@@ -1,12 +1,12 @@
 "use server";
 
-import { CreateWorkJourneyRuleUseCase } from "@/core/application/useCases/CreateWorkJourneyRuleUseCase";
-import { GetWorkJourneyRuleUseCase } from "@/core/application/useCases/GetWorkJourneyRuleUseCase";
-import { UpdateWorkJourneyRuleUseCase } from "@/core/application/useCases/UpdateWorkJourneyRuleUseCase";
-import { WorkJourneyRule } from "@/core/domain/entities/WorkJourneyRule";
-import { ApiWorkJourneyRuleRepository } from "@/core/infrastructure/ApiWorkJourneyRuleRepository";
-import { HttpClient } from "@/core/infrastructure/HttpClient";
+import { makeCreateJourneyUseCase, makeGetJourneyUseCase, makeUpdateJourneyUseCase } from "@/core/factories/makeWorkJourneyUseCase";
 import { cookies } from "next/headers";
+
+type FormState = {
+  success?: boolean
+  error?: string;
+};
 
 export async function GetWorkJourneyRuleAction() {
   const cookieStore = await cookies();
@@ -16,13 +16,10 @@ export async function GetWorkJourneyRuleAction() {
     return { success: false, error: "Usuário não autenticado." };
   }
 
-  const httpClient = new HttpClient(token)
-
-  const repository = new ApiWorkJourneyRuleRepository(httpClient);
-  const createUseCase = new GetWorkJourneyRuleUseCase(repository);
+  const getUseCase = makeGetJourneyUseCase(token)
 
   try {
-    const rule = await createUseCase.execute();
+    const rule = await getUseCase.execute();
     return { success: true, data: rule };
   } catch (error) {
     console.error(error);
@@ -31,7 +28,15 @@ export async function GetWorkJourneyRuleAction() {
   }
 }
 
-export async function CreateWorkJourneyRuleAction(rules: WorkJourneyRule) {
+export async function CreateWorkJourneyRuleAction(prevState: FormState, formData: FormData): Promise<FormState> {
+  const monday = formData.get("monday") as string
+  const tuesday = formData.get("tuesday") as string
+  const wednesday = formData.get("wednesday") as string
+  const thursday = formData.get("thursday") as string
+  const friday = formData.get("friday") as string
+  const saturday = formData.get("saturday") as string
+  const sunday = formData.get("sunday") as string
+
   const cookieStore = await cookies();
   const token = cookieStore.get("jwt_token")?.value;
 
@@ -39,20 +44,20 @@ export async function CreateWorkJourneyRuleAction(rules: WorkJourneyRule) {
     return { success: false, error: "Usuário não autenticado." };
   }
 
-  const httpClient = new HttpClient(token)
-  const repository = new ApiWorkJourneyRuleRepository(httpClient);
-  const createUseCase = new CreateWorkJourneyRuleUseCase(repository);
+ const createUseCase = makeCreateJourneyUseCase(token)
 
   try {
     await createUseCase.execute({
-      monday: rules.monday,
-      tuesday: rules.tuesday,
-      wednesday: rules.wednesday,
-      thursday: rules.thursday,
-      friday: rules.friday,
-      saturday: rules.saturday,
-      sunday: rules.sunday,
+      monday,
+      tuesday,
+      wednesday,
+      thursday,
+      friday,
+      saturday,
+      sunday,
     });
+
+    return { success: true }
   } catch (error) {
     console.error(error);
     const message = error instanceof Error ? error.message : "Erro interno no servidor.";
@@ -60,7 +65,15 @@ export async function CreateWorkJourneyRuleAction(rules: WorkJourneyRule) {
   }
 }
 
-export async function UpdateWorkJourneyRuleAction(rules: WorkJourneyRule) {
+export async function UpdateWorkJourneyRuleAction(prevState: FormState, formData: FormData): Promise<FormState> {
+  const monday = formData.get("monday") as string
+  const tuesday = formData.get("tuesday") as string
+  const wednesday = formData.get("wednesday") as string
+  const thursday = formData.get("thursday") as string
+  const friday = formData.get("friday") as string
+  const saturday = formData.get("saturday") as string
+  const sunday = formData.get("sunday") as string
+
   const cookieStore = await cookies();
   const token = cookieStore.get("jwt_token")?.value;
 
@@ -68,20 +81,20 @@ export async function UpdateWorkJourneyRuleAction(rules: WorkJourneyRule) {
     return { success: false, error: "Usuário não autenticado." };
   }
 
-  const httpClient = new HttpClient(token)
-  const repository = new ApiWorkJourneyRuleRepository(httpClient);
-  const updateUseCase = new UpdateWorkJourneyRuleUseCase(repository);
+  const updateUseCase = makeUpdateJourneyUseCase(token)
 
   try {
     await updateUseCase.execute({
-      monday: rules.monday,
-      tuesday: rules.tuesday,
-      wednesday: rules.wednesday,
-      thursday: rules.thursday,
-      friday: rules.friday,
-      saturday: rules.saturday,
-      sunday: rules.sunday,
+      monday,
+      tuesday,
+      wednesday,
+      thursday,
+      friday,
+      saturday,
+      sunday,
     });
+
+    return { success: true }
   } catch (error) {
     console.error("WorkJourneyRule:", error);
     const message = error instanceof Error ? error.message : "Erro interno no servidor.";
