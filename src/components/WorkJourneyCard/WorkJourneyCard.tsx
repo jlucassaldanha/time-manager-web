@@ -1,7 +1,8 @@
 "use client";
 
-import { WorkJourneyRule } from "@/core/domain/entities/WorkJourneyRule";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { WorkJourneyResponse, WorkJourneyRule } from "@/core/domain/entities/WorkJourneyRule";
+import useWorkJourney from "@/hooks/useWorkJourney";
+import { Box, Button, CircularProgress, Grid, TextField, Typography } from "@mui/material";
 
 interface WorkJourneyCardProps {
   journeys: WorkJourneyRule;
@@ -10,113 +11,125 @@ interface WorkJourneyCardProps {
   onSave: (rule: WorkJourneyRule | null) => void;
 }
 
-export default function WorkJourneyCard({
-  journeys,
-  loading,
-  onUpdateJourneyDay,
-  onSave,
-}: WorkJourneyCardProps) {
+export default function WorkJourneyCard() {
+  const emptyRule: WorkJourneyResponse = {
+    monday: "",
+    tuesday: "",
+    wednesday: "",
+    thursday: "",
+    friday: "",
+    saturday: "",
+    sunday: "",
+  };
+
+  const { initialData, isFetching, formState, formAction, isSaving } =
+    useWorkJourney(emptyRule);
+
+  if (isFetching) return <CircularProgress />;
+
   return (
-    <Box component="form" action={() => onSave(journeys)} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      {loading ? (
-        <Typography>Carregando...</Typography>
-      ) : (
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Grid
-            container
-            spacing={2}
-            sx={{ display: "flex", justifyContent: "center" }}
-          >
-            <TextField
-              label="Segunda"
-              type="time"
-              size="small"
-              value={journeys?.monday}
-              onChange={(e) => onUpdateJourneyDay("monday", e.target.value)}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-            <TextField
-              label="Terça"
-              type="time"
-              size="small"
-              value={journeys?.tuesday}
-              onChange={(e) => onUpdateJourneyDay("tuesday", e.target.value)}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-            <TextField
-              label="Quarta"
-              type="time"
-              size="small"
-              value={journeys?.wednesday}
-              onChange={(e) => onUpdateJourneyDay("wednesday", e.target.value)}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-            <TextField
-              label="Quinta"
-              type="time"
-              size="small"
-              value={journeys?.thursday}
-              onChange={(e) => onUpdateJourneyDay("thursday", e.target.value)}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-            <TextField
-              label="Sexta"
-              type="time"
-              size="small"
-              value={journeys?.friday}
-              onChange={(e) => onUpdateJourneyDay("friday", e.target.value)}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-            <TextField
-              label="Sábado"
-              type="time"
-              size="small"
-              value={journeys?.saturday}
-              onChange={(e) => onUpdateJourneyDay("saturday", e.target.value)}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-            <TextField
-              label="Domingo"
-              type="time"
-              size="small"
-              value={journeys?.sunday}
-              onChange={(e) => onUpdateJourneyDay("sunday", e.target.value)}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-          </Grid>
-        </Box>
-      )}
+    <Box component="form" action={formAction} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ display: "flex", justifyContent: "center" }}
+        >
+          {initialData.id && (
+            <input type="hidden" name="id" value={initialData.id} />
+          )}
+
+          <TextField
+            name="monday"
+            label="Segunda"
+            type="time"
+            size="small"
+            defaultValue={initialData.monday || ""}
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
+          <TextField
+            name="tuesday"
+            label="Terça"
+            type="time"
+            size="small"
+            defaultValue={initialData.tuesday || ""}
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
+          <TextField
+            name="wednesday"
+            label="Quarta"
+            type="time"
+            size="small"
+            defaultValue={initialData.wednesday || ""}
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
+          <TextField
+            name="thursday"
+            label="Quinta"
+            type="time"
+            size="small"
+            defaultValue={initialData.thursday || ""}
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
+          <TextField
+            name="friday"
+            label="Sexta"
+            type="time"
+            size="small"
+            defaultValue={initialData.friday || ""}
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
+          <TextField
+            name="saturday"
+            label="Sábado"
+            type="time"
+            size="small"
+            defaultValue={initialData.saturday || ""}
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
+          <TextField
+            name="sunday"
+            label="Domingo"
+            type="time"
+            size="small"
+            defaultValue={initialData.sunday || ""}
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
+        </Grid>
+      </Box>
+      
+      {formState?.error && <Typography color="error" >{formState.error}</Typography>}
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" type="submit" disabled={loading}>
+        <Button variant="contained" type="submit" loading={isSaving}>
           Salvar alterações
         </Button>
       </Box>

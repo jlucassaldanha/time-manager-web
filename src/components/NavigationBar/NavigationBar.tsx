@@ -20,7 +20,7 @@ export default function NavigationBar() {
           <Button href="/punch" color="inherit">
             Bater ponto
           </Button>
-          <Button href="/preferences/workjourney" color="inherit">
+          <Button href="/preferences" color="inherit">
             Editar jornada
           </Button>
           <Button color="inherit" onClick={logoutAction}>Sair</Button>

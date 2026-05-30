@@ -28,6 +28,58 @@ export async function GetWorkJourneyRuleAction() {
   }
 }
 
+export async function SaveWorkJourneyRuleAction(prevState: FormState, formData: FormData): Promise<FormState> {
+  const id = formData.get("id") as string | null;
+
+  const monday = formData.get("monday") as string
+  const tuesday = formData.get("tuesday") as string
+  const wednesday = formData.get("wednesday") as string
+  const thursday = formData.get("thursday") as string
+  const friday = formData.get("friday") as string
+  const saturday = formData.get("saturday") as string
+  const sunday = formData.get("sunday") as string
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get("jwt_token")?.value;
+
+  if (!token) {
+    return { success: false, error: "Usuário não autenticado." };
+  }
+
+  try {
+    if (id) {
+      const updateUseCase = makeUpdateJourneyUseCase(token)
+      await updateUseCase.execute({
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+        sunday,
+      });
+    } else {
+      const createUseCase = makeCreateJourneyUseCase(token)
+      await createUseCase.execute({
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+        sunday,
+      });
+    }
+    
+
+    return { success: true }
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : "Erro interno no servidor.";
+    return { success: false, error: message };
+  }
+}
+
 export async function CreateWorkJourneyRuleAction(prevState: FormState, formData: FormData): Promise<FormState> {
   const monday = formData.get("monday") as string
   const tuesday = formData.get("tuesday") as string
