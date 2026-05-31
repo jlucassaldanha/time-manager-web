@@ -1,18 +1,22 @@
 import {
   CreateWorkJourneyRuleAction,
   GetWorkJourneyRuleAction,
+  SaveWorkJourneyRuleAction,
   UpdateWorkJourneyRuleAction,
 } from "@/actions/WorkJourneyRuleActions";
 import {
   WorkJourneyResponse,
   WorkJourneyRule,
 } from "@/core/domain/entities/WorkJourneyRule";
-import { useEffect, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+
+const initialState = { error: undefined, success: undefined };
 
 export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
-  const [journeys, setJourneys] = useState<WorkJourneyResponse>(emptyRule);
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [initialData, setInitialData] = useState<WorkJourneyResponse>(emptyRule);
+  const [isFetching, setIsFetching] = useState<boolean>(true)
+
+  const [formState, formAction, isSaving] = useActionState(SaveWorkJourneyRuleAction, initialState);
 
   useEffect(() => {
     const fetchRule = async () => {
@@ -20,58 +24,24 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
         const existingRule = await GetWorkJourneyRuleAction();
 
         if (existingRule.data) {
-          setJourneys(existingRule.data);
-          setError(null)
+          setInitialData(existingRule.data);
         }
 
-        if (existingRule.error) {
-          setError(existingRule.error)
-        }
       } catch (error) {
         console.error("Erro ao buscar a jornada", error);
       } finally {
-        setLoading(false)
+        setIsFetching(false)
       }
     };
     
     fetchRule();
   }, []);
 
-  const updateJourneyDay = (day: keyof WorkJourneyRule, value: string) => {
-    setJourneys((prev) => ({ ...prev, [day]: value }));
-  };
-
-  const handleSave = async () => {
-    setLoading(true)
-    try {
-      if (journeys.id) {
-        const response = await UpdateWorkJourneyRuleAction(journeys);
-
-        if (response?.error) {
-          setError(response.error)
-        } else {
-          setError(null)
-        }
-      } else {
-        const response = await CreateWorkJourneyRuleAction(journeys);
-
-        if (response?.error) {
-          setError(response.error)
-        } else {
-          setError(null)
-        }
-      }
-      setLoading(false)
-    } catch (error) {
-      console.error("Erro ao salvar", error);
-    }
-  };
-
   return {
-	journeys,
-  error,
-  loading,
-	updateJourneyDay,
-	handleSave
+	initialData,
+  isFetching,
+  formState,
+  formAction,
+  isSaving
   }
 }

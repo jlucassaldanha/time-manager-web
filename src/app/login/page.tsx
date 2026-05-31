@@ -1,28 +1,22 @@
 "use client"
 
-import useLogin from "@/hooks/useLogin";
+import { loginAction } from "@/actions/AuthActions";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
+import { useActionState } from "react";
+
+const initialState = { error: undefined }
 
 export default function Login() {
-	const {
-    email,
-    password,
-    error,
-    loading,
-    handleEmailChange,
-    handlePasswordChange,
-    handleLogin
-  } = useLogin()
+  const [state, formAction, isPending] = useActionState(loginAction, initialState)
 
   return (
-    <Box component="form" action={handleLogin} sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, mt: 15}}>
+    <Box component="form" action={formAction} sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, mt: 15}}>
       <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
         <TextField
+          name="email"
           label="Email"
           type="text"
-          value={email}
-          onChange={(e) => handleEmailChange(e.target.value)}
           slotProps={{
             inputLabel: {
               shrink: true,
@@ -30,10 +24,9 @@ export default function Login() {
           }}
         />
         <TextField
+          name="password"
           label="Senha"
           type="password"
-          value={password}
-          onChange={(e) => handlePasswordChange(e.target.value)}
           slotProps={{
             inputLabel: {
               shrink: true,
@@ -41,9 +34,9 @@ export default function Login() {
           }}
         />
       </Box>
-      {error && <Typography color="error" >{error}</Typography>}
+      {state?.error && <Typography color="error" >{state.error}</Typography>}
       <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
-        <Button variant="contained" type="submit" loading={loading} >Entrar</Button>
+        <Button variant="contained" type="submit" loading={isPending} >Entrar</Button>
         <Button variant="contained" onClick={() => redirect("/register")}>Cadastrar</Button>
       </Box>
     </Box>
