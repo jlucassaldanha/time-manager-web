@@ -4,6 +4,26 @@ import { ApiSummaryRepository } from "../core/infrastructure/ApiSummaryRepositor
 import { GetPeriodSummaryUseCase } from "../core/application/useCases/GetPeriodSummaryUseCase";
 import { HttpClient } from "@/core/infrastructure/HttpClient";
 import { cookies } from "next/headers";
+import { PeriodSummaryResponse } from "@/core/domain/entities/Summary";
+
+export type SummaryState = {
+  success: boolean
+  data?: PeriodSummaryResponse | null;
+  error?: string;
+};
+
+export async function SearchSummaryAction(prevState: SummaryState, formData: FormData) {
+  const start = formData.get("startDate") as string
+  const end = formData.get("endDate") as string
+
+  if (!start || !end) return { success: false, error: "Datas inválidas."}
+
+  const response = await GetPeriodSummaryAction(start, end)
+
+  if (response.error) return { success: false, error: response.error}
+  
+  return { success: true, data: response.data }
+}
 
 export async function GetPeriodSummaryAction(
   startDateString: string,

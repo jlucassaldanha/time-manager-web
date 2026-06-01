@@ -1,7 +1,7 @@
 "use client";
 
 import PeriodController from "@/components/PeriodController/PeriodController";
-import { Box, Typography, Alert, AlertTitle, Button } from "@mui/material";
+import { Box, Typography, Alert, AlertTitle, Button, CircularProgress } from "@mui/material";
 import DailyAccordion from "@/components/DailyAccordion/DailyAccordion";
 import PeriodCard from "@/components/PeriodCard/PeriodCard";
 import DynamicPunchModal from "@/components/DynamicPunchModal/DynamicPunchModal";
@@ -14,11 +14,12 @@ export default function Summary() {
   const {
     records,
     error,
-    loading,
+    isLoading,
     startDate,
     endDate,
     setStartDate,
     setEndDate,
+    formAction,
     handleGetPeriodClick,
   } = useSummaryRecords();
 
@@ -43,21 +44,24 @@ export default function Summary() {
 
   return (
     <Box
-      sx={{ display: "flex", flexDirection: "column", gap: 3, padding: "5px", minWidth: 400 }}
+      sx={{ display: "flex", flexDirection: "column", gap: 3, padding: "5px", maxWidth: 350 }}
     >
       <PeriodController
-        onClick={handleGetPeriodClick}
+        action={formAction}
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
         startDateValue={startDate}
         endDateValue={endDate}
-        loading={loading}
+        isPending={isLoading}
       />
 
-      {loading ? (
-        <Typography variant="h6">Carregando...</Typography>
+      {isLoading ? (
+        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          <CircularProgress />
+        </Box>
+        
       ) : (
-        <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
+        <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3}}>
           <PeriodCard period={records} />
 
           <Box>
@@ -92,7 +96,7 @@ export default function Summary() {
             </Alert>
           )}
 
-          {!records && !loading && (
+          {!records && !isLoading && (
             <Typography variant="h6">
               Nenhum registro para esse periodo.
             </Typography>

@@ -1,24 +1,26 @@
 import { Box, TextField, Button } from "@mui/material";
 
 interface PeriodControllerProps {
-  onClick: () => void;
+  action: (payload: FormData) => void;
   onStartDateChange: (date: string) => void;
   onEndDateChange: (date: string) => void;
   startDateValue: string;
   endDateValue: string;
-  loading: boolean
+  isPending: boolean
 }
 
 export default function PeriodController({
-  onClick,
+  action,
   onStartDateChange,
   onEndDateChange,
   startDateValue,
   endDateValue,
-  loading
+  isPending
 }: PeriodControllerProps) {
   return (
     <Box
+      component="form"
+      action={action}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -26,7 +28,7 @@ export default function PeriodController({
       }}
     >
       <TextField
-        id="startDate"
+        name="startDate"
         label="Data inicial"
         variant="outlined"
         type="date"
@@ -39,7 +41,7 @@ export default function PeriodController({
         }}
       />
       <TextField
-        id="endDate"
+        name="endDate"
         label="Data final"
         variant="outlined"
         type="date"
@@ -51,7 +53,7 @@ export default function PeriodController({
           },
         }}
       />
-      <Button variant="contained" onClick={onClick} disabled={loading}>
+      <Button variant="contained" type="submit" disabled={isPending}>
         Filtrar
       </Button>
     </Box>
