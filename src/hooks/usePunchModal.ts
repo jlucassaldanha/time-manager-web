@@ -17,7 +17,7 @@ export default function usePunchModal(
   ) => {
     setEditingDate(date);
     setTitle(title);
-    setSelectedPunch(punchData); // Guarda o ponto clicado
+    setSelectedPunch(punchData);
   };
 
   const handleClosePunchModal = () => {

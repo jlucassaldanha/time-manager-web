@@ -22,7 +22,6 @@ export default function Teste() {
     <Box
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
-      <PunchModal date={"04/11/2001"} initialData={{}}/>
     </Box>
   );
 }
