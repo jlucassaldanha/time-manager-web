@@ -5,7 +5,7 @@ import { Box, Typography, Alert, AlertTitle, Button, CircularProgress } from "@m
 import DailyAccordion from "@/components/DailyAccordion/DailyAccordion";
 import PeriodCard from "@/components/PeriodCard/PeriodCard";
 import useSummaryRecords from "@/hooks/useSummaryRecords";
-import useDynamicPunchModal from "@/hooks/useDynamicPunchModal";
+import usePunchModal from "@/hooks/usePunchModal";
 import useAllowanceModal from "@/hooks/useAllowanceModal";
 import AllowanceModal from "@/components/AllowanceModal/AllowanceModal";
 import PunchModal from "@/components/PunchModal/PunchModal";
@@ -29,7 +29,7 @@ export default function Summary() {
     selectedPunch,
     handleOpenPunchModal,
     handleClosePunchModal,
-  } = useDynamicPunchModal();
+  } = usePunchModal();
 
   const {
     allowanceTitle,
@@ -41,6 +41,8 @@ export default function Summary() {
     handleDeleteAllowance,
   } = useAllowanceModal(records, handleGetPeriodClick);
 
+  const isInitialLoad = isLoading && !records;
+
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", gap: 3, padding: 2, maxWidth: 400, minWidth: 350 }}
@@ -51,10 +53,10 @@ export default function Summary() {
         onEndDateChange={setEndDate}
         startDateValue={startDate}
         endDateValue={endDate}
-        isPending={isLoading}
+        isPending={isInitialLoad}
       />
 
-      {isLoading ? (
+      {isInitialLoad ? (
         <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
           <CircularProgress />
         </Box>
@@ -102,8 +104,6 @@ export default function Summary() {
               </Typography>
             </Box>
           )}
-
-          
 
           <PunchModal
             key={editingDate || "closed"}

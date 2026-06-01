@@ -4,7 +4,7 @@ import {
 import { useState } from "react";
 
 
-export default function useDynamicPunchModal(
+export default function usePunchModal(
 ) {
   const [editingDate, setEditingDate] = useState<string | null>(null);
   const [title, setTitle] = useState<string>("");
