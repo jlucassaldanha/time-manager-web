@@ -1,15 +1,8 @@
 "use client";
 
-import { WorkJourneyResponse, WorkJourneyRule } from "@/core/domain/entities/WorkJourneyRule";
+import { WorkJourneyResponse } from "@/core/domain/entities/WorkJourneyRule";
 import useWorkJourney from "@/hooks/useWorkJourney";
 import { Box, Button, CircularProgress, Grid, TextField, Typography } from "@mui/material";
-
-interface WorkJourneyCardProps {
-  journeys: WorkJourneyRule;
-  loading: boolean;
-  onUpdateJourneyDay: (day: keyof WorkJourneyRule, value: string) => void;
-  onSave: (rule: WorkJourneyRule | null) => void;
-}
 
 export default function WorkJourneyCard() {
   const emptyRule: WorkJourneyResponse = {

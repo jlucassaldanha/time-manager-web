@@ -1,6 +1,7 @@
-import { GetPeriodSummaryAction } from "@/actions/SummaryActions";
-import { PeriodSummaryResponse } from "@/core/domain/entities/Summary";
-import { useEffect, useState } from "react";
+import { GetPeriodSummaryAction, SearchSummaryAction, SummaryState } from "@/actions/SummaryActions";
+import { useActionState, useEffect, useState } from "react";
+
+const initialState: SummaryState = { success: false, data: undefined, error: undefined };
 
 export default function useSummaryRecords() {
   const initialStartDate = new Date();
@@ -11,46 +12,42 @@ export default function useSummaryRecords() {
 
   const [startDate, setStartDate] = useState<string>(initialStartDateString);
   const [endDate, setEndDate] = useState<string>(initialEndDateString);
-  const [records, setRecords] = useState<PeriodSummaryResponse | null>();
 
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true)
+  const [initialStateData, setInitialStateData] = useState<SummaryState>(initialState)
+  const [isFetchingInitial, setIsFetchingInitial] = useState(true)
 
-  const fetchRecords = async (start: string, end: string) => {
-    setLoading(true)
-    const result = await GetPeriodSummaryAction(start, end);
-    
-    if (!result.success) {
-      setError(result.error || "Erro desconhecido");
-      setRecords(undefined); 
-      return;
-    }
-
-    setError(null);
-    setRecords(result.data);
-    setLoading(false)
-  };
+  const [formState, formAction, isPending] = useActionState(SearchSummaryAction, initialState)
 
   useEffect(() => {
-    const getRecords = async () => {
-      await fetchRecords(startDate, endDate);
+    const fetchInitialRecords = async () => {
+      setIsFetchingInitial(true)
+      const result = await GetPeriodSummaryAction(initialStartDateString, initialEndDateString);
+      setInitialStateData(result)
+      setIsFetchingInitial(false)
     };
 
-    getRecords();
+    fetchInitialRecords();
   }, []);
 
+  const activeState = formState?.data || formState?.error ? formState : initialStateData
+  const isLoading = isFetchingInitial || isPending
+
   const handleGetPeriodClick = async () => {
-    await fetchRecords(startDate, endDate);
+    const formData = new FormData()
+    formData.append("startDate", startDate)
+    formData.append("endDate", endDate)
+    formAction(formData);
   };
 
   return {
-    records,
-    error,
-    loading,
+    records: activeState.data,
+    error: activeState.error,
+    isLoading: isLoading,
     startDate,
     endDate,
     setStartDate,
     setEndDate,
+    formAction,
     handleGetPeriodClick,
   };
 }

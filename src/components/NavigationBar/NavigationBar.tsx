@@ -18,10 +18,10 @@ export default function NavigationBar() {
             Relatório
           </Button>
           <Button href="/punch" color="inherit">
-            Bater ponto
+            Ponto
           </Button>
           <Button href="/preferences" color="inherit">
-            Editar jornada
+            Jornada
           </Button>
           <Button color="inherit" onClick={logoutAction}>Sair</Button>
         </Toolbar>
