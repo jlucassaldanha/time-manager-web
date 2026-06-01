@@ -97,9 +97,11 @@ export default function Summary() {
           )}
 
           {!records && !isLoading && (
-            <Typography variant="h6">
-              Nenhum registro para esse periodo.
-            </Typography>
+            <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+              <Typography variant="h6">
+                Nenhum registro para esse periodo.
+              </Typography>
+            </Box>
           )}
 
           <DynamicPunchModal

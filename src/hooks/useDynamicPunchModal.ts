@@ -53,20 +53,20 @@ export default function useDynamicPunchModal(
           date,
           punch.time,
           punch.type,
-          punch.note || "N/A",
+          punch.note || "Sem nota.",
         );
       } else {
         await CreateManualPunchAction(
           date,
           punch.time,
           punch.type,
-          punch.note || "N/A",
+          punch.note || "Sem nota.",
         );
       }
     }
 
     for (let i = 0; i < idsToDelete.length; i++) {
-      await DeletePunchAction(idsToDelete[i], "N/A");
+      await DeletePunchAction(idsToDelete[i], "Sem nota.");
     }
 
     onSuccessRefresh();
