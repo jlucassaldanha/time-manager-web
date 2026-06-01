@@ -1,5 +1,5 @@
 import { GetPeriodSummaryAction, SearchSummaryAction, SummaryState } from "@/actions/SummaryActions";
-import { useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 
 const initialState: SummaryState = { success: false, data: undefined, error: undefined };
 
@@ -36,7 +36,9 @@ export default function useSummaryRecords() {
     const formData = new FormData()
     formData.append("startDate", startDate)
     formData.append("endDate", endDate)
-    formAction(formData);
+    startTransition(() => {
+      formAction(formData); 
+    });
   };
 
   return {
