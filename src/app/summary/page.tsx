@@ -4,11 +4,11 @@ import PeriodController from "@/components/PeriodController/PeriodController";
 import { Box, Typography, Alert, AlertTitle, Button, CircularProgress } from "@mui/material";
 import DailyAccordion from "@/components/DailyAccordion/DailyAccordion";
 import PeriodCard from "@/components/PeriodCard/PeriodCard";
-import DynamicPunchModal from "@/components/DynamicPunchModal/DynamicPunchModal";
 import useSummaryRecords from "@/hooks/useSummaryRecords";
-import useDynamicPunchModal from "@/hooks/useDynamicPunchModal";
+import usePunchModal from "@/hooks/usePunchModal";
 import useAllowanceModal from "@/hooks/useAllowanceModal";
 import AllowanceModal from "@/components/AllowanceModal/AllowanceModal";
+import PunchModal from "@/components/PunchModal/PunchModal";
 
 export default function Summary() {
   const {
@@ -25,12 +25,11 @@ export default function Summary() {
 
   const {
     title,
-    initialData,
     editingDate,
+    selectedPunch,
     handleOpenPunchModal,
     handleClosePunchModal,
-    handleSavePunches,
-  } = useDynamicPunchModal(records, handleGetPeriodClick);
+  } = usePunchModal();
 
   const {
     allowanceTitle,
@@ -42,6 +41,8 @@ export default function Summary() {
     handleDeleteAllowance,
   } = useAllowanceModal(records, handleGetPeriodClick);
 
+  const isInitialLoad = isLoading && !records;
+
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", gap: 3, padding: 2, maxWidth: 400, minWidth: 350 }}
@@ -52,10 +53,10 @@ export default function Summary() {
         onEndDateChange={setEndDate}
         startDateValue={startDate}
         endDateValue={endDate}
-        isPending={isLoading}
+        isPending={isInitialLoad}
       />
 
-      {isLoading ? (
+      {isInitialLoad ? (
         <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
           <CircularProgress />
         </Box>
@@ -97,18 +98,20 @@ export default function Summary() {
           )}
 
           {!records && !isLoading && (
-            <Typography variant="h6">
-              Nenhum registro para esse periodo.
-            </Typography>
+            <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+              <Typography variant="h6">
+                Nenhum registro para esse periodo.
+              </Typography>
+            </Box>
           )}
 
-          <DynamicPunchModal
+          <PunchModal
             key={editingDate || "closed"}
             title={title}
             date={editingDate}
-            initialData={initialData}
+            initialData={selectedPunch}
             onClose={handleClosePunchModal}
-            onSave={handleSavePunches}
+            onSuccessRefresh={handleGetPeriodClick}
           />
 
           <AllowanceModal

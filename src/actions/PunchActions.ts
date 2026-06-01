@@ -32,6 +32,47 @@ export async function CreateRealtimePunchAction() {
   }
 }
 
+export type SinglePunchState = {
+  success?: boolean;
+  error?: string;
+};
+
+export async function SubmitSinglePunchAction(
+  prevState: SinglePunchState,
+  formData: FormData
+): Promise<SinglePunchState> {
+  const intent = formData.get("intent") as string; // 'save' ou 'delete'
+  const id = formData.get("id") as string | null;
+  const date = formData.get("date") as string;
+  const time = formData.get("time") as string;
+  const type = formData.get("type") as RecordType;
+  const note = formData.get("note") as string;
+
+  try {
+    if (intent === "delete" && id) {
+      const res = await DeletePunchAction(id, "Excluído pelo usuário.");
+      if (res?.error) throw new Error(res.error);
+      return { success: true };
+    }
+
+    if (!date || !time) throw new Error("Data e hora são obrigatórios.");
+
+    if (id) {
+      // Tem ID = É uma atualização
+      const res = await UpdatePunchAction(id, date, time, type, note);
+      if (res?.error) throw new Error(res.error);
+    } else {
+      // Não tem ID = É uma criação
+      const res = await CreateManualPunchAction(date, time, type, note);
+      if (res?.error) throw new Error(res.error);
+    }
+
+    return { success: true };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Erro na operação." };
+  }
+}
+
 export async function CreateManualPunchAction(
   date: string,
   time: string,
