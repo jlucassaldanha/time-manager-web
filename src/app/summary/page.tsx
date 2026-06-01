@@ -44,7 +44,7 @@ export default function Summary() {
 
   return (
     <Box
-      sx={{ display: "flex", flexDirection: "column", gap: 3, padding: "5px", maxWidth: 350 }}
+      sx={{ display: "flex", flexDirection: "column", gap: 3, padding: 2, maxWidth: 400, minWidth: 350 }}
     >
       <PeriodController
         action={formAction}
@@ -61,7 +61,7 @@ export default function Summary() {
         </Box>
         
       ) : (
-        <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3}}>
+        <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
           <PeriodCard period={records} />
 
           <Box>

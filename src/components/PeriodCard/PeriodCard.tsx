@@ -1,38 +1,51 @@
 import { PeriodSummaryResponse } from "@/core/domain/entities/Summary";
 import { formatMinutesToHoursString } from "@/utils/formatMinutesToHoursString";
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Grid, Typography, Box } from "@mui/material";
 
 interface PeriodCardProps {
   period?: PeriodSummaryResponse | null;
 }
 
 export default function PeriodCard({ period }: PeriodCardProps) {
-	const isNegative = period?.balanceMinutes || 0 < 0 
+  const balance = period?.balanceMinutes || 0
+  const isNegative = balance < 0;
 
-	return (
-		<Card>
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid size={4} >
-              <Typography variant="subtitle2" gutterBottom >Saldo Total</Typography>
-              <Typography variant="h6" color={ isNegative ? "error" : "success" }>{formatMinutesToHoursString(period?.balanceMinutes || 0)}</Typography>
+  return (
+    <Card>
+      <CardContent sx={{ display: "flex", justifyContent: "center", padding: 2}}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box>
+            <Typography variant="subtitle1" gutterBottom>
+              Saldo Total
+            </Typography>
+            <Typography variant="h6" color={isNegative ? "error" : "success"}>
+              {formatMinutesToHoursString(balance)}
+            </Typography>
+          </Box>
+            
+            <Grid container spacing={3}>
+              <Grid size="auto">
+                <Typography variant="subtitle2">Registradas</Typography>
+                <Typography variant="body1">
+                  {formatMinutesToHoursString(period?.totalWorkedMinutes || 0)}
+                </Typography>
+              </Grid>
+              <Grid size="auto">
+                <Typography variant="subtitle2">Esperadas</Typography>
+                <Typography variant="body1">
+                  {formatMinutesToHoursString(period?.goalMinutes || 0)}
+                </Typography>
+              </Grid>
+              <Grid size="auto">
+                <Typography variant="subtitle2">Abonadas</Typography>
+                <Typography variant="body1">
+                  {formatMinutesToHoursString(period?.totalAllowedMinutes || 0)}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid container spacing={1.6}>
-              <Grid size={4} >
-                <Typography variant="caption" >Registradas</Typography>
-                <Typography variant="body1" >{formatMinutesToHoursString(period?.totalWorkedMinutes || 0)}</Typography>
-              </Grid>
-              <Grid size={4} >
-                <Typography variant="caption" >Esperadas</Typography>
-                <Typography variant="body1" >{formatMinutesToHoursString(period?.goalMinutes || 0)}</Typography>
-              </Grid>
-              <Grid size={4} >
-                <Typography variant="caption" >Abonadas</Typography>
-                <Typography variant="body1" >{formatMinutesToHoursString(period?.totalAllowedMinutes || 0)}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-	)
+          
+        </Box>
+      </CardContent>
+    </Card>
+  );
 }
