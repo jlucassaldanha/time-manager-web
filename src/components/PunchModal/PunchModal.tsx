@@ -26,7 +26,7 @@ export default function PunchModal({ date, initialData, onClose, onSuccessRefres
   }, [state.success, onSuccessRefresh, onClose]);
 
 	return (
-		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
+		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm" sx={{display: "flex", justifyContent: "center"}}>
 			<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", pr: 2 }}>
 				<DialogTitle>{initialData?.id ? "Editar" : "Adicionar"}</DialogTitle>
 				<Button onClick={onClose} disabled={isPending}>Fechar</Button>

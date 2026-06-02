@@ -43,7 +43,7 @@ export default function AllowanceModal({
   }, [state.success, onSuccessRefresh, onClose]);
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm" sx={{display: "flex", justifyContent: "center"}}>
       <Box
         sx={{
           display: "flex",
