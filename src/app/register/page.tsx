@@ -28,6 +28,9 @@ export default function Register() {
         mt: 15,
       }}
     >
+      <Box>
+        <Typography variant="h4">Cadastrar</Typography>
+      </Box>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <TextField
         name="email"
@@ -61,11 +64,11 @@ export default function Register() {
         />
       </Box>
       {state?.error && <Typography color="error">{state.error}</Typography>}
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
         <Button variant="contained" type="submit" loading={isPending}>
           Cadastrar
         </Button>
-        <Button variant="contained" onClick={() => redirect("/login")}>
+        <Button onClick={() => redirect("/login")}>
           Logar
         </Button>
       </Box>
