@@ -26,7 +26,7 @@ export async function SubmitSingleAllowanceAction(
 
   try {
     if (intent === "delete" && id) {
-      // Exclui o abono único
+      
       const res = await DeleteAllowanceAction(id, justification);
       if (res?.error) throw new Error(res.error);
       return { success: true };
@@ -37,7 +37,6 @@ export async function SubmitSingleAllowanceAction(
     }
 
     if (id) {
-      // Atualiza o abono existente daquele dia
       const res = await UpdateAllowanceAction(date, {
         id,
         duration,
@@ -46,7 +45,6 @@ export async function SubmitSingleAllowanceAction(
       }, justification);
       if (res?.error) throw new Error(res.error);
     } else {
-      // Cria o primeiro (e único) abono do dia
       const res = await CreateAllowanceAction(date, {
         id: "",
         duration,

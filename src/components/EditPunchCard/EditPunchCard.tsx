@@ -91,8 +91,6 @@ export default function EditPunchCard({
         </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        
-        {/* Renderização Condicional: Só mostra Excluir se o ponto já existir (initialData.id) */}
         {initialData?.id ? (
           <Button 
             variant="outlined" 
@@ -105,14 +103,14 @@ export default function EditPunchCard({
             Excluir
           </Button>
         ) : (
-          <Box /> // Spacer vazio para manter o botão "Salvar" alinhado à direita na criação
+          <Box /> 
         )}
 
         <Button 
           variant="contained" 
           type="submit" 
           name="intent" 
-          value="save" // Essencial garantir que o salvar envie intent="save"
+          value="save"
           loading={isPending}
         >
           Salvar alterações
