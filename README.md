@@ -1,4 +1,5 @@
 # Time Manager - Web Frontend
+**Este projeto possui uma API Rest que pode ser acessada clicando [aqui](https://github.com/jlucassaldanha/TimeManager)** 
 
 Aplicação web para o sistema **Time Manager**, responsável pela interface de usuário para gestão de horas extras.
 
