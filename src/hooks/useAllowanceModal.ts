@@ -1,80 +1,41 @@
 import { useState } from "react";
-import {
-  CreateAllowanceAction,
-  DeleteAllowanceAction,
-  UpdateAllowanceAction,
-} from "@/actions/AllowanceActions";
 import { AllowanceDto } from "@/core/domain/entities/Allowance";
-import { PeriodSummaryResponse } from "@/core/domain/entities/Summary";
-import { formatToBrDateString } from "@/utils/formatToBrDateString";
 
-export default function useAllowanceModal(records: PeriodSummaryResponse | undefined | null, onSuccessRefresh: () => void) {
-  const [allowanceEditingDate, setAllowanceEditingDate] = useState<
-    string | null
-  >(null);
-  const [allowanceTitle, setAllowanceTitle] = useState<string>("");
-  /*const [allowanceInitialData, setAllowanceInitialData] = useState<
-    AllowanceDto[] | null
-  >(initialData);*/
+export default function useSingleAllowanceModal(onSuccessRefresh: () => void) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [allowanceData, setAllowanceData] = useState<AllowanceDto | null>(null);
 
-  const handleOpenAllowanceModal = (
-    title: string,
-    date: string,
-    //data?: AllowanceDto[],
-  ) => {
-    setAllowanceEditingDate(date);
-    setAllowanceTitle(title);
-    //setAllowanceInitialData(data || null);
+  const handleOpenForAdd = (date: string) => {
+    setSelectedDate(date);
+    setAllowanceData(null); // Modo Criação
+    setIsOpen(true);
   };
 
-  const handleCloseAllowanceModal = () => {
-    setAllowanceEditingDate(null);
-    //setAllowanceInitialData(null);
+  const handleOpenForEdit = (date: string, data: AllowanceDto) => {
+    setSelectedDate(date);
+    setAllowanceData(data); // Modo Edição
+    setIsOpen(true);
   };
 
-  const allowanceInitialData =
-      records?.days
-        .find((day) => formatToBrDateString(day.date) === allowanceEditingDate)
-        ?.allowanceDetails?.map((allowance) => {
-          return allowance;
-        }) || [];
-
-  const handleSaveAllowance = async (
-    idsToDelete: string[],
-    date: string,
-    allowances: AllowanceDto[],
-  ) => {
-    const realIds = allowanceInitialData?.map((p) => p.id);
-
-    for (let i = 0; i < allowances.length; i++) {
-      const allowance = allowances[i];
-
-      if (realIds?.includes(allowance.id)) {
-        await UpdateAllowanceAction(date, allowance, "N/A");
-      } else {
-        await CreateAllowanceAction(date, allowance);
-      }
-    }
-
-    for (let i = 0; i < idsToDelete.length; i++) {
-      await DeleteAllowanceAction(idsToDelete[i], "N/A");
-    }
-
-    onSuccessRefresh();
+  const handleClose = () => {
+    setIsOpen(false);
+    setSelectedDate(null);
+    setAllowanceData(null);
   };
 
-  const handleDeleteAllowance = async (id: string) => {
-    await DeleteAllowanceAction(id, "N/A");
+  const handleSuccess = () => {
+    handleClose();
     onSuccessRefresh();
   };
 
   return {
-    allowanceTitle,
-    allowanceInitialData,
-    allowanceEditingDate,
-    handleOpenAllowanceModal,
-    handleCloseAllowanceModal,
-    handleSaveAllowance,
-    handleDeleteAllowance,
+    isOpen,
+    selectedDate,
+    allowanceData,
+    handleOpenForAdd,
+    handleOpenForEdit,
+    handleClose,
+    handleSuccess
   };
 }

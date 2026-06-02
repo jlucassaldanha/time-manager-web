@@ -1,39 +1,35 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle, Alert } from "@mui/material";
 import AllowanceCard from "../AllowanceCard/AllowanceCard";
 import { AllowanceDto } from "@/core/domain/entities/Allowance";
+import { SingleAllowanceState, SubmitSingleAllowanceAction } from "@/actions/AllowanceActions";
+import { useActionState, useEffect } from "react";
 
 interface AllowanceModalProps {
-  title: string;
+  title?: string;
   date: string | null;
-  initialData?: AllowanceDto[] | null;
+  initialData?: AllowanceDto | null;
   onClose: () => void;
-  onSave: (idsToDelete: string[], date: string, allowances: AllowanceDto[]) => void;
-  onDelete?: (id: string) => void;
+  onSuccessRefresh: () => void;
 }
+
+const initialState: SingleAllowanceState = {};
 
 export default function AllowanceModal({
   title,
   date,
   initialData,
   onClose,
-  onSave,
-  onDelete,
+  onSuccessRefresh
 }: AllowanceModalProps) {
   const isOpen = Boolean(date);
+  const [state, formAction, isPending] = useActionState(SubmitSingleAllowanceAction, initialState);
 
-  const handleSave = (idsToDelete: string[], allowances: AllowanceDto[]) => {
-    if (date) {
-      onSave(idsToDelete, date, allowances);
+  useEffect(() => {
+    if (state.success) {
+      if (typeof onSuccessRefresh === 'function') onSuccessRefresh();
       onClose();
     }
-  };
-
-  const handleDelete = (id: string) => {
-    if (onDelete) {
-      onDelete(id);
-      onClose();
-    }
-  };
+  }, [state.success, onSuccessRefresh, onClose]);
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
@@ -51,11 +47,12 @@ export default function AllowanceModal({
         <Button onClick={onClose}>Fechar</Button>
       </Box>
       <DialogContent dividers>
+        {state.error && <Alert severity="error" sx={{ mb: 2 }}>{state.error}</Alert>}
         <AllowanceCard
-          key={date || "closed"}
           initialData={initialData}
-          onSave={handleSave}
-          onDelete={handleDelete}
+          date={date}
+          formAction={formAction}
+          isPending={isPending}
         />
       </DialogContent>
     </Dialog>

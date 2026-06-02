@@ -20,7 +20,7 @@ import AddIcon from '@mui/icons-material/Add';
 interface DailyAccordionProps {
   day: DailySummaryResponse;
   openPunchModal: (title: string, date: string, punchData: PunchDto | null) => void
-  openAllowanceModal: (title: string, date: string, data?: AllowanceDto[]) => void
+  openAllowanceModal: (title: string, date: string, data?: AllowanceDto) => void
 }
 
 export default function DailyAccordion({ day, openPunchModal, openAllowanceModal }: DailyAccordionProps) {
@@ -29,6 +29,10 @@ export default function DailyAccordion({ day, openPunchModal, openAllowanceModal
   const havePunches = day.punches.length > 0
 
   const haveAllowance = day.allowedMinutes > 0
+
+  const currentAllowance = Array.isArray(day.allowanceDetails) 
+  ? day.allowanceDetails[0] 
+  : day.allowanceDetails;
 
   return (
     <Accordion disableGutters >
@@ -76,8 +80,8 @@ export default function DailyAccordion({ day, openPunchModal, openAllowanceModal
 
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2, gap: 2 }}>
           {haveAllowance ? 
-            <Button variant="contained" onClick={() => openAllowanceModal("Editar", formatToBrDateString(day.date), day.allowanceDetails)}>Editar abonos</Button> 
-            : <Button variant="contained" onClick={() => (openAllowanceModal("Adicionar", formatToBrDateString(day.date)), day.allowanceDetails)}>Adicionar abonos</Button> }
+            <Button variant="contained" onClick={() => openAllowanceModal("Editar", formatToBrDateString(day.date), currentAllowance)}>Editar abonos</Button> 
+            : <Button variant="contained" onClick={() => (openAllowanceModal("Adicionar", formatToBrDateString(day.date)), currentAllowance)}>Adicionar abonos</Button> }
         </Box>
       </AccordionDetails>
     </Accordion>

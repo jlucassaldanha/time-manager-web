@@ -9,6 +9,59 @@ import { HttpClient } from "@/core/infrastructure/HttpClient";
 import formatBrDateToIsoDateString from "@/utils/formatBrDateToIsoDateString";
 import { cookies } from "next/headers";
 
+export type SingleAllowanceState = {
+  success?: boolean;
+  error?: string;
+};
+
+export async function SubmitSingleAllowanceAction(
+  prevState: SingleAllowanceState,
+  formData: FormData
+): Promise<SingleAllowanceState> {
+  const intent = formData.get("intent") as string; // 'save' ou 'delete'
+  const id = formData.get("id") as string | null;
+  const date = formData.get("date") as string;
+  const duration = formData.get("duration") as string // Ou 'time', dependendo de como você salva
+  const justification = formData.get("justification") as string;
+
+  try {
+    if (intent === "delete" && id) {
+      // Exclui o abono único
+      const res = await DeleteAllowanceAction(id, justification);
+      if (res?.error) throw new Error(res.error);
+      return { success: true };
+    }
+
+    if (!date || !duration || !justification) {
+      throw new Error("Minutos e justificativa são obrigatórios.");
+    }
+
+    if (id) {
+      // Atualiza o abono existente daquele dia
+      const res = await UpdateAllowanceAction(date, {
+        id,
+        duration,
+        justification,
+        date: new Date(date)
+      }, justification);
+      if (res?.error) throw new Error(res.error);
+    } else {
+      // Cria o primeiro (e único) abono do dia
+      const res = await CreateAllowanceAction(date, {
+        id: "",
+        duration,
+        justification,
+        date: new Date(date)
+      });
+      if (res?.error) throw new Error(res.error);
+    }
+
+    return { success: true };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Erro na operação." };
+  }
+}
+
 export async function CreateAllowanceAction(
   date: string,
   allowance: AllowanceDto,

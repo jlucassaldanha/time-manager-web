@@ -9,6 +9,7 @@ import usePunchModal from "@/hooks/usePunchModal";
 import useAllowanceModal from "@/hooks/useAllowanceModal";
 import AllowanceModal from "@/components/AllowanceModal/AllowanceModal";
 import PunchModal from "@/components/PunchModal/PunchModal";
+import { AllowanceDto } from "@/core/domain/entities/Allowance";
 
 export default function Summary() {
   const {
@@ -32,14 +33,22 @@ export default function Summary() {
   } = usePunchModal();
 
   const {
-    allowanceTitle,
-    allowanceEditingDate,
-    allowanceInitialData,
-    handleOpenAllowanceModal,
-    handleCloseAllowanceModal,
-    handleSaveAllowance,
-    handleDeleteAllowance,
-  } = useAllowanceModal(records, handleGetPeriodClick);
+    isOpen,
+    selectedDate,
+    allowanceData,
+    handleOpenForAdd,
+    handleOpenForEdit,
+    handleClose,
+    handleSuccess
+  } = useAllowanceModal(handleGetPeriodClick);
+
+  const handleAllowanceModalAdapter = (modalTitle: string, date: string, data?: AllowanceDto) => {
+    if (data) {
+      handleOpenForEdit(date, data);
+    } else {
+      handleOpenForAdd(date);
+    }
+  };
 
   const isInitialLoad = isLoading && !records;
 
@@ -72,9 +81,7 @@ export default function Summary() {
                   day={day}
                   key={i}
                   openPunchModal={handleOpenPunchModal}
-                  openAllowanceModal={(title, date) =>
-                    handleOpenAllowanceModal(title, date)
-                  }
+                  openAllowanceModal={handleAllowanceModalAdapter}
                 />
               );
             })}
@@ -115,12 +122,11 @@ export default function Summary() {
           />
 
           <AllowanceModal
-            title={allowanceTitle}
-            date={allowanceEditingDate}
-            initialData={allowanceInitialData}
-            onClose={handleCloseAllowanceModal}
-            onSave={handleSaveAllowance}
-            onDelete={handleDeleteAllowance}
+          key={selectedDate || "closed-allowance"}
+            date={selectedDate}
+            initialData={allowanceData}
+            onClose={handleClose}
+            onSuccessRefresh={handleGetPeriodClick}
           />
         </Box>
       )}
