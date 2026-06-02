@@ -29,7 +29,7 @@ export default function PunchModal({ title, date, initialData, onClose, onSucces
 	return (
 		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
 			<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", pr: 2 }}>
-				<DialogTitle>{title} - {date}</DialogTitle>
+				<DialogTitle>{title}</DialogTitle>
 				<Button onClick={onClose} disabled={isPending}>Fechar</Button>
 			</Box>
 			<DialogContent dividers>

@@ -13,16 +13,19 @@ export default function EditPunchCard({
   initialData,
   formAction,
   isPending,
-  date
+  date,
 }: {
   initialData?: PunchDto | null;
   formAction: (payload: FormData) => void;
-  isPending: boolean
-  date: string | null
+  isPending: boolean;
+  date: string | null;
 }) {
-	const [type, setType] = useState<string>(initialData?.type || "Entry");
+  const [type, setType] = useState<string>(initialData?.type || "Entry");
 
-	const handleTypeChange = (event: React.MouseEvent<HTMLElement>, newType: string | null) => {
+  const handleTypeChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newType: string | null,
+  ) => {
     if (newType !== null) {
       setType(newType);
     }
@@ -34,10 +37,12 @@ export default function EditPunchCard({
       sx={{ display: "flex", flexDirection: "column" }}
     >
       <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-		{date && <input type="hidden" name="date" value={date} />}
-        {initialData?.id && <input type="hidden" name="id" value={initialData.id} />}
+        {date && <input type="hidden" name="date" value={date} />}
+        {initialData?.id && (
+          <input type="hidden" name="id" value={initialData.id} />
+        )}
         <input type="hidden" name="intent" value="save" />
-		<input type="hidden" name="type" value={type} />
+        <input type="hidden" name="type" value={type} />
         <Box
           sx={{
             display: "flex",
@@ -51,34 +56,40 @@ export default function EditPunchCard({
             label="Hora"
             type="time"
             size="small"
-            defaultValue={initialData?.timestamp && formatDateToTimeString(initialData?.timestamp)}
+            defaultValue={
+              initialData?.timestamp &&
+              formatDateToTimeString(initialData?.timestamp)
+            }
             slotProps={{
               inputLabel: {
                 shrink: true,
               },
             }}
           />
-          <ToggleButtonGroup value={type} onChange={handleTypeChange} exclusive>
-            <ToggleButton value="Entry">
-              Entrada
-            </ToggleButton>
-            <ToggleButton value="Exit">
-              Saida
-            </ToggleButton>
+          <ToggleButtonGroup
+            value={type}
+            onChange={handleTypeChange}
+            exclusive
+            orientation="vertical"
+          >
+            <ToggleButton value="Entry">Entrada</ToggleButton>
+            <ToggleButton value="Exit">Saida</ToggleButton>
           </ToggleButtonGroup>
         </Box>
-        <TextField
-          name="note"
-          label="Nota"
-          multiline
-          rows={3}
-          defaultValue={initialData?.note || "Sem nota"}
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-        />
+        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          <TextField
+            name="note"
+            label="Nota"
+            multiline
+            rows={4}
+            defaultValue={initialData?.note || "Sem nota"}
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+          />
+        </Box>
       </Box>
       <Button variant="contained" type="submit" loading={isPending}>
         Salvar alterações

@@ -2,18 +2,20 @@ import {
   GetWorkJourneyRuleAction,
   SaveWorkJourneyRuleAction,
 } from "@/actions/WorkJourneyRuleActions";
-import {
-  WorkJourneyResponse,
-} from "@/core/domain/entities/WorkJourneyRule";
+import { WorkJourneyResponse } from "@/core/domain/entities/WorkJourneyRule";
 import { useActionState, useEffect, useState } from "react";
 
 const initialState = { error: undefined, success: undefined };
 
 export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
-  const [initialData, setInitialData] = useState<WorkJourneyResponse>(emptyRule);
-  const [isFetching, setIsFetching] = useState<boolean>(true)
+  const [initialData, setInitialData] =
+    useState<WorkJourneyResponse>(emptyRule);
+  const [isFetching, setIsFetching] = useState<boolean>(true);
 
-  const [formState, formAction, isSaving] = useActionState(SaveWorkJourneyRuleAction, initialState);
+  const [formState, formAction, isSaving] = useActionState(
+    SaveWorkJourneyRuleAction,
+    initialState,
+  );
 
   useEffect(() => {
     const fetchRule = async () => {
@@ -23,22 +25,21 @@ export default function useWorkJourney(emptyRule: WorkJourneyResponse) {
         if (existingRule.data) {
           setInitialData(existingRule.data);
         }
-
       } catch (error) {
         console.error("Erro ao buscar a jornada", error);
       } finally {
-        setIsFetching(false)
+        setIsFetching(false);
       }
     };
     
     fetchRule();
-  }, []);
+  }, [formState.success]);
 
   return {
-	initialData,
-  isFetching,
-  formState,
-  formAction,
-  isSaving
-  }
+    initialData,
+    isFetching,
+    formState,
+    formAction,
+    isSaving,
+  };
 }

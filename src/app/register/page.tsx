@@ -11,6 +11,10 @@ const initialState = { error: undefined }
 export default function Register() {
   const [state, formAction, isPending] = useActionState(registerAction, initialState)
 
+  if (state.success) {
+    redirect("/login")
+  }
+
   return (
     <Box
       component="form"
