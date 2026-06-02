@@ -66,20 +66,19 @@ export default function AllowanceCard({
           />
         </Box>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        {initialData ? (
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2, gap: 3 }}>
+        
           <Button
             color="error"
             type="submit"
             name="intent"
             value="delete"
             loading={isPending}
+            disabled={!initialData}
           >
             Excluir
           </Button>
-        ) : (
-          <Box />
-        )}
+        
 
         <Button
           variant="contained"

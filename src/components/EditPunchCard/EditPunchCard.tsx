@@ -75,7 +75,13 @@ export default function EditPunchCard({
             <ToggleButton value="Exit">Saida</ToggleButton>
           </ToggleButtonGroup>
         </Box>
-        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <TextField
             name="note"
             label="Nota"
@@ -90,32 +96,35 @@ export default function EditPunchCard({
           />
         </Box>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        {initialData?.id ? (
-          <Button 
-            variant="outlined" 
-            color="error" 
-            type="submit" 
-            name="intent" 
-            value="delete" 
-            loading={isPending}
-          >
-            Excluir
-          </Button>
-        ) : (
-          <Box /> 
-        )}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mt: 2,
+          width: "100%",
+        }}
+      >
+        <Button
+          variant="outlined"
+          color="error"
+          type="submit"
+          name="intent"
+          value="delete"
+          loading={isPending}
+          disabled={!initialData?.id}
+        >
+          Excluir
+        </Button>
 
-        <Button 
-          variant="contained" 
-          type="submit" 
-          name="intent" 
+        <Button
+          variant="contained"
+          type="submit"
+          name="intent"
           value="save"
           loading={isPending}
         >
           Salvar alterações
         </Button>
-        
       </Box>
     </Box>
   );

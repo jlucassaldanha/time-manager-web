@@ -8,6 +8,7 @@ import {
   AlertTitle,
   Button,
   CircularProgress,
+  Paper,
 } from "@mui/material";
 import DailyAccordion from "@/components/DailyAccordion/DailyAccordion";
 import PeriodCard from "@/components/PeriodCard/PeriodCard";
@@ -67,14 +68,16 @@ export default function Summary() {
         minWidth: 350,
       }}
     >
-      <PeriodController
-        action={formAction}
-        onStartDateChange={setStartDate}
-        onEndDateChange={setEndDate}
-        startDateValue={startDate}
-        endDateValue={endDate}
-        isPending={isInitialLoad}
-      />
+      <Paper sx={{padding: 4}}>
+        <PeriodController
+          action={formAction}
+          onStartDateChange={setStartDate}
+          onEndDateChange={setEndDate}
+          startDateValue={startDate}
+          endDateValue={endDate}
+          isPending={isInitialLoad}
+        />
+      </Paper>
 
       {isInitialLoad ? (
         <Box
