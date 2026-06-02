@@ -80,8 +80,8 @@ export default function DailyAccordion({ day, openPunchModal, openAllowanceModal
 
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2, gap: 2 }}>
           {haveAllowance ? 
-            <Button variant="contained" onClick={() => openAllowanceModal(formatToBrDateString(day.date), currentAllowance)}>Editar abonos</Button> 
-            : <Button variant="contained" onClick={() => (openAllowanceModal(formatToBrDateString(day.date)), currentAllowance)}>Adicionar abonos</Button> }
+            <Button variant="contained" onClick={() => openAllowanceModal(formatToBrDateString(day.date), currentAllowance)}>Editar abono</Button> 
+            : <Button variant="contained" onClick={() => (openAllowanceModal(formatToBrDateString(day.date)), currentAllowance)}>Adicionar abono</Button> }
         </Box>
       </AccordionDetails>
     </Accordion>
