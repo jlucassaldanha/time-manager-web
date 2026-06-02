@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 type FormState = {
   success?: boolean
-  error?: string; // O "?" torna a string opcional (podendo ser undefined)
+  error?: string; 
 };
 
 export async function loginAction(prevState: FormState, formData: FormData): Promise<FormState> {
