@@ -41,7 +41,6 @@ export default function EditPunchCard({
         {initialData?.id && (
           <input type="hidden" name="id" value={initialData.id} />
         )}
-        <input type="hidden" name="intent" value="save" />
         <input type="hidden" name="type" value={type} />
         <Box
           sx={{
@@ -91,9 +90,35 @@ export default function EditPunchCard({
           />
         </Box>
       </Box>
-      <Button variant="contained" type="submit" loading={isPending}>
-        Salvar alterações
-      </Button>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+        
+        {/* Renderização Condicional: Só mostra Excluir se o ponto já existir (initialData.id) */}
+        {initialData?.id ? (
+          <Button 
+            variant="outlined" 
+            color="error" 
+            type="submit" 
+            name="intent" 
+            value="delete" 
+            loading={isPending}
+          >
+            Excluir
+          </Button>
+        ) : (
+          <Box /> // Spacer vazio para manter o botão "Salvar" alinhado à direita na criação
+        )}
+
+        <Button 
+          variant="contained" 
+          type="submit" 
+          name="intent" 
+          value="save" // Essencial garantir que o salvar envie intent="save"
+          loading={isPending}
+        >
+          Salvar alterações
+        </Button>
+        
+      </Box>
     </Box>
   );
 }
