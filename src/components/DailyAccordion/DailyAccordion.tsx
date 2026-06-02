@@ -19,8 +19,8 @@ import AddIcon from '@mui/icons-material/Add';
 
 interface DailyAccordionProps {
   day: DailySummaryResponse;
-  openPunchModal: (title: string, date: string, punchData: PunchDto | null) => void
-  openAllowanceModal: (title: string, date: string, data?: AllowanceDto) => void
+  openPunchModal: (date: string, punchData: PunchDto | null) => void
+  openAllowanceModal: (date: string, data?: AllowanceDto) => void
 }
 
 export default function DailyAccordion({ day, openPunchModal, openAllowanceModal }: DailyAccordionProps) {
@@ -65,7 +65,7 @@ export default function DailyAccordion({ day, openPunchModal, openAllowanceModal
         <Box sx={{display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center", justifyContent: "star", pt: 2}}>
           {day.punches.map((punch, i) => (
             <Box key={i} sx={{ display: "flex", gap: 2 }} >
-              <ActionCard onClick={() => openPunchModal("Editar", formatToBrDateString(day.date), punch)} >
+              <ActionCard onClick={() => openPunchModal(formatToBrDateString(day.date), punch)} >
                 <DisplayInfo 
                   title={punch.type === "Entry" ? "Entrada" : "Saida"}
                   info={formatDateToTimeString(punch.timestamp)}
@@ -73,15 +73,15 @@ export default function DailyAccordion({ day, openPunchModal, openAllowanceModal
               </ActionCard>
             </Box>
           ))}
-          <ActionCard onClick={() => (openPunchModal("Adicionar", formatToBrDateString(day.date), null))} >
+          <ActionCard onClick={() => (openPunchModal(formatToBrDateString(day.date), null))} >
             <AddIcon color="primary" />
           </ActionCard>
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2, gap: 2 }}>
           {haveAllowance ? 
-            <Button variant="contained" onClick={() => openAllowanceModal("Editar", formatToBrDateString(day.date), currentAllowance)}>Editar abonos</Button> 
-            : <Button variant="contained" onClick={() => (openAllowanceModal("Adicionar", formatToBrDateString(day.date)), currentAllowance)}>Adicionar abonos</Button> }
+            <Button variant="contained" onClick={() => openAllowanceModal(formatToBrDateString(day.date), currentAllowance)}>Editar abonos</Button> 
+            : <Button variant="contained" onClick={() => (openAllowanceModal(formatToBrDateString(day.date)), currentAllowance)}>Adicionar abonos</Button> }
         </Box>
       </AccordionDetails>
     </Accordion>

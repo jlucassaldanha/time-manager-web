@@ -1,7 +1,14 @@
 "use client";
 
 import PeriodController from "@/components/PeriodController/PeriodController";
-import { Box, Typography, Alert, AlertTitle, Button, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Alert,
+  AlertTitle,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import DailyAccordion from "@/components/DailyAccordion/DailyAccordion";
 import PeriodCard from "@/components/PeriodCard/PeriodCard";
 import useSummaryRecords from "@/hooks/useSummaryRecords";
@@ -25,7 +32,6 @@ export default function Summary() {
   } = useSummaryRecords();
 
   const {
-    title,
     editingDate,
     selectedPunch,
     handleOpenPunchModal,
@@ -33,16 +39,14 @@ export default function Summary() {
   } = usePunchModal();
 
   const {
-    isOpen,
     selectedDate,
     allowanceData,
     handleOpenForAdd,
     handleOpenForEdit,
     handleClose,
-    handleSuccess
   } = useAllowanceModal(handleGetPeriodClick);
 
-  const handleAllowanceModalAdapter = (modalTitle: string, date: string, data?: AllowanceDto) => {
+  const handleAllowanceModalAdapter = (date: string, data?: AllowanceDto) => {
     if (data) {
       handleOpenForEdit(date, data);
     } else {
@@ -54,7 +58,14 @@ export default function Summary() {
 
   return (
     <Box
-      sx={{ display: "flex", flexDirection: "column", gap: 3, padding: 2, maxWidth: 400, minWidth: 350 }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 3,
+        padding: 2,
+        maxWidth: 400,
+        minWidth: 350,
+      }}
     >
       <PeriodController
         action={formAction}
@@ -66,12 +77,17 @@ export default function Summary() {
       />
 
       {isInitialLoad ? (
-        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <CircularProgress />
         </Box>
-        
       ) : (
-        <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
           <PeriodCard period={records} />
 
           <Box>
@@ -105,7 +121,13 @@ export default function Summary() {
           )}
 
           {!records && !isLoading && (
-            <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Typography variant="h6">
                 Nenhum registro para esse periodo.
               </Typography>
@@ -114,7 +136,6 @@ export default function Summary() {
 
           <PunchModal
             key={editingDate || "closed"}
-            title={title}
             date={editingDate}
             initialData={selectedPunch}
             onClose={handleClosePunchModal}
@@ -122,7 +143,7 @@ export default function Summary() {
           />
 
           <AllowanceModal
-          key={selectedDate || "closed-allowance"}
+            key={selectedDate || "closed-allowance"}
             date={selectedDate}
             initialData={allowanceData}
             onClose={handleClose}

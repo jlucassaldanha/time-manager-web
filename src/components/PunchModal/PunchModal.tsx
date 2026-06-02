@@ -5,7 +5,6 @@ import { SinglePunchState, SubmitSinglePunchAction } from "@/actions/PunchAction
 import { PunchDto } from "@/core/domain/entities/Summary"
 
 interface PunchModalProps {
-	title: string
 	date: string | null
 	initialData: PunchDto | null
 	onClose: () => void
@@ -14,7 +13,7 @@ interface PunchModalProps {
 
 const initialState: SinglePunchState = {};
 
-export default function PunchModal({ title, date, initialData, onClose, onSuccessRefresh }: PunchModalProps) {
+export default function PunchModal({ date, initialData, onClose, onSuccessRefresh }: PunchModalProps) {
 	const isOpen = Boolean(date)
 
 	const [state, formAction, isPending] = useActionState(SubmitSinglePunchAction, initialState);
@@ -29,7 +28,7 @@ export default function PunchModal({ title, date, initialData, onClose, onSucces
 	return (
 		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
 			<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", pr: 2 }}>
-				<DialogTitle>{title}</DialogTitle>
+				<DialogTitle>{initialData?.id ? "Editar" : "Adicionar"}</DialogTitle>
 				<Button onClick={onClose} disabled={isPending}>Fechar</Button>
 			</Box>
 			<DialogContent dividers>

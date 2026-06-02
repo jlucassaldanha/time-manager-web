@@ -1,11 +1,20 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle, Alert } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Alert,
+} from "@mui/material";
 import AllowanceCard from "../AllowanceCard/AllowanceCard";
 import { AllowanceDto } from "@/core/domain/entities/Allowance";
-import { SingleAllowanceState, SubmitSingleAllowanceAction } from "@/actions/AllowanceActions";
+import {
+  SingleAllowanceState,
+  SubmitSingleAllowanceAction,
+} from "@/actions/AllowanceActions";
 import { useActionState, useEffect } from "react";
 
 interface AllowanceModalProps {
-  title?: string;
   date: string | null;
   initialData?: AllowanceDto | null;
   onClose: () => void;
@@ -15,18 +24,20 @@ interface AllowanceModalProps {
 const initialState: SingleAllowanceState = {};
 
 export default function AllowanceModal({
-  title,
   date,
   initialData,
   onClose,
-  onSuccessRefresh
+  onSuccessRefresh,
 }: AllowanceModalProps) {
   const isOpen = Boolean(date);
-  const [state, formAction, isPending] = useActionState(SubmitSingleAllowanceAction, initialState);
+  const [state, formAction, isPending] = useActionState(
+    SubmitSingleAllowanceAction,
+    initialState,
+  );
 
   useEffect(() => {
     if (state.success) {
-      if (typeof onSuccessRefresh === 'function') onSuccessRefresh();
+      if (typeof onSuccessRefresh === "function") onSuccessRefresh();
       onClose();
     }
   }, [state.success, onSuccessRefresh, onClose]);
@@ -41,13 +52,15 @@ export default function AllowanceModal({
           pr: 2,
         }}
       >
-        <DialogTitle>
-          {title} - {date}
-        </DialogTitle>
+        <DialogTitle>{initialData?.id ? "Editar" : "Adicionar"}</DialogTitle>
         <Button onClick={onClose}>Fechar</Button>
       </Box>
       <DialogContent dividers>
-        {state.error && <Alert severity="error" sx={{ mb: 2 }}>{state.error}</Alert>}
+        {state.error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {state.error}
+          </Alert>
+        )}
         <AllowanceCard
           initialData={initialData}
           date={date}
