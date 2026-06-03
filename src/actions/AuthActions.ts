@@ -24,7 +24,7 @@ export async function loginAction(prevState: FormState, formData: FormData): Pro
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production",
 			sameSite: "strict",
-			maxAge: 60 * 60 * 8,
+			maxAge: 60 * 60 * 24 * 7,
 			path: "/"
 		})
 	} catch (error) {
