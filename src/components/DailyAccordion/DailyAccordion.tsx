@@ -15,31 +15,51 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { formatDateToTimeString } from "@/utils/formatDateToTimeString";
 import { AllowanceDto } from "@/core/domain/entities/Allowance";
 import ActionCard from "../ActionCard/ActionCard";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 
 interface DailyAccordionProps {
   day: DailySummaryResponse;
-  openPunchModal: (date: string, punchData: PunchDto | null) => void
-  openAllowanceModal: (date: string, data?: AllowanceDto) => void
+  isDeleting: boolean
+  openPunchModal: (date: string, punchData: PunchDto | null) => void;
+  openAllowanceModal: (date: string, data?: AllowanceDto) => void;
+  onDeleteAllowance: (allowanceId: string) => void;
 }
 
-export default function DailyAccordion({ day, openPunchModal, openAllowanceModal }: DailyAccordionProps) {
-  const isNegative = day.balanceMinutes < 0
+export default function DailyAccordion({
+  day,
+  isDeleting,
+  openPunchModal,
+  openAllowanceModal,
+  onDeleteAllowance,
+}: DailyAccordionProps) {
+  const isNegative = day.balanceMinutes < 0;
 
-  const havePunches = day.punches.length > 0
+  const havePunches = day.punches.length > 0;
 
-  const haveAllowance = day.allowedMinutes > 0
+  const haveAllowance = day.allowedMinutes > 0;
 
-  const currentAllowance = Array.isArray(day.allowanceDetails) 
-  ? day.allowanceDetails[0] 
-  : day.allowanceDetails;
+  const currentAllowance = Array.isArray(day.allowanceDetails)
+    ? day.allowanceDetails[0]
+    : day.allowanceDetails;
 
   return (
-    <Accordion disableGutters >
+    <Accordion disableGutters>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%", pr: 2 }}>
-          <Typography variant="h6" >{formatToBrDateString(day.date)}</Typography>
-          <Typography variant="subtitle1" color={isNegative ? "error" : "success"}>{formatMinutesToHoursString(day.balanceMinutes)}</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            pr: 2,
+          }}
+        >
+          <Typography variant="h6">{formatToBrDateString(day.date)}</Typography>
+          <Typography
+            variant="subtitle1"
+            color={isNegative ? "error" : "success"}
+          >
+            {formatMinutesToHoursString(day.balanceMinutes)}
+          </Typography>
         </Box>
       </AccordionSummary>
       <AccordionDetails>
@@ -57,31 +77,59 @@ export default function DailyAccordion({ day, openPunchModal, openAllowanceModal
             info={formatMinutesToHoursString(day.allowedMinutes)}
           />
         </Box>
-        
+
         <Divider sx={{ mb: 2 }} />
 
-        {havePunches && <Typography variant="subtitle1" >Registros</Typography>}
+        {havePunches && <Typography variant="subtitle1">Registros</Typography>}
 
-        <Box sx={{display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center", justifyContent: "star", pt: 2}}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "star",
+            pt: 2,
+          }}
+        >
           {day.punches.map((punch, i) => (
-            <Box key={i} sx={{ display: "flex", gap: 2 }} >
-              <ActionCard onClick={() => openPunchModal(formatToBrDateString(day.date), punch)} >
-                <DisplayInfo 
+            <Box key={i} sx={{ display: "flex", gap: 2 }}>
+              <ActionCard
+                onClick={() =>
+                  openPunchModal(formatToBrDateString(day.date), punch)
+                }
+              >
+                <DisplayInfo
                   title={punch.type === "Entry" ? "Entrada" : "Saida"}
                   info={formatDateToTimeString(punch.timestamp)}
                 />
               </ActionCard>
             </Box>
           ))}
-          <ActionCard onClick={() => (openPunchModal(formatToBrDateString(day.date), null))} >
+          <ActionCard
+            onClick={() => openPunchModal(formatToBrDateString(day.date), null)}
+          >
             <AddIcon color="primary" />
           </ActionCard>
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2, gap: 2 }}>
-          {haveAllowance ? 
-            <Button variant="contained" onClick={() => openAllowanceModal(formatToBrDateString(day.date), currentAllowance)}>Editar abono</Button> 
-            : <Button variant="contained" onClick={() => (openAllowanceModal(formatToBrDateString(day.date)), currentAllowance)}>Adicionar abono</Button> }
+          {haveAllowance && currentAllowance ? (
+            <Button
+              color="error"
+              onClick={() => onDeleteAllowance(currentAllowance.id)}
+              loading={isDeleting}
+            >
+              Excluir abono registrado
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              onClick={() => openAllowanceModal(formatToBrDateString(day.date))}
+            >
+              Adicionar abono
+            </Button>
+          )}
         </Box>
       </AccordionDetails>
     </Accordion>

@@ -1,17 +1,14 @@
 "use client";
 
-import { AllowanceDto } from "@/core/domain/entities/Allowance";
 import { Box, Button, TextField } from "@mui/material";
 
 interface AllowanceCardProps {
-  initialData?: AllowanceDto | null;
   date: string | null;
   formAction: (payload: FormData) => void;
   isPending: boolean;
 }
 
 export default function AllowanceCard({
-  initialData,
   date,
   formAction,
   isPending,
@@ -26,9 +23,6 @@ export default function AllowanceCard({
         }}
       >
         {date && <input type="hidden" name="date" value={date} />}
-        {initialData?.id && (
-          <input type="hidden" name="id" value={initialData.id} />
-        )}
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
           <Box
@@ -44,7 +38,6 @@ export default function AllowanceCard({
               label="Tempo"
               type="time"
               size="small"
-              defaultValue={initialData?.duration}
               slotProps={{
                 inputLabel: {
                   shrink: true,
@@ -57,7 +50,6 @@ export default function AllowanceCard({
             label="Justification"
             multiline
             rows={3}
-            value={initialData?.justification}
             slotProps={{
               inputLabel: {
                 shrink: true,
@@ -67,20 +59,6 @@ export default function AllowanceCard({
         </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2, gap: 3 }}>
-        {initialData && (
-          <Button
-            color="error"
-            type="submit"
-            name="intent"
-            value="delete"
-            loading={isPending}
-          >
-            Excluir
-          </Button>
-        )}
-          
-        
-
         <Button
           variant="contained"
           type="submit"

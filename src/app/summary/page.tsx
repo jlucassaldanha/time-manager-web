@@ -17,7 +17,8 @@ import usePunchModal from "@/hooks/usePunchModal";
 import useAllowanceModal from "@/hooks/useAllowanceModal";
 import AllowanceModal from "@/components/AllowanceModal/AllowanceModal";
 import PunchModal from "@/components/PunchModal/PunchModal";
-import { AllowanceDto } from "@/core/domain/entities/Allowance";
+import { useTransition } from "react";
+import { DeleteAllowanceAction } from "@/actions/AllowanceActions";
 
 export default function Summary() {
   const {
@@ -41,18 +42,21 @@ export default function Summary() {
 
   const {
     selectedDate,
-    allowanceData,
     handleOpenForAdd,
-    handleOpenForEdit,
     handleClose,
   } = useAllowanceModal(handleGetPeriodClick);
 
-  const handleAllowanceModalAdapter = (date: string, data?: AllowanceDto) => {
-    if (data) {
-      handleOpenForEdit(date, data);
-    } else {
-      handleOpenForAdd(date);
-    }
+  const [isDeleting, startTransition] = useTransition();
+
+  const handleDeleteAllowance = (allowanceId: string) => {
+    startTransition(async () => {
+      const result = await DeleteAllowanceAction(allowanceId, "Deletar"); 
+      if (!result?.error) {
+        handleGetPeriodClick(); 
+      } else {
+        alert(result.error);
+      }
+    });
   };
 
   const isInitialLoad = isLoading && !records;
@@ -99,8 +103,10 @@ export default function Summary() {
                 <DailyAccordion
                   day={day}
                   key={i}
+                  isDeleting={isDeleting}
                   openPunchModal={handleOpenPunchModal}
-                  openAllowanceModal={handleAllowanceModalAdapter}
+                  openAllowanceModal={handleOpenForAdd}
+                  onDeleteAllowance={handleDeleteAllowance}
                 />
               );
             })}
@@ -148,7 +154,6 @@ export default function Summary() {
           <AllowanceModal
             key={selectedDate || "closed-allowance"}
             date={selectedDate}
-            initialData={allowanceData}
             onClose={handleClose}
             onSuccessRefresh={handleGetPeriodClick}
           />
