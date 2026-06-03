@@ -66,18 +66,19 @@ export default function AllowanceCard({
           />
         </Box>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2, gap: 3 }}>
-        
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2, gap: 3 }}>
+        {initialData && (
           <Button
             color="error"
             type="submit"
             name="intent"
             value="delete"
             loading={isPending}
-            disabled={!initialData}
           >
             Excluir
           </Button>
+        )}
+          
         
 
         <Button
@@ -87,7 +88,7 @@ export default function AllowanceCard({
           value="save"
           loading={isPending}
         >
-          Salvar Abono
+          Salvar
         </Button>
       </Box>
     </Box>

@@ -2,7 +2,7 @@
 
 import { WorkJourneyResponse } from "@/core/domain/entities/WorkJourneyRule";
 import useWorkJourney from "@/hooks/useWorkJourney";
-import { Box, Button, CircularProgress, Grid, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Grid, TextField } from "@mui/material";
 
 export default function WorkJourneyCard() {
   const emptyRule: WorkJourneyResponse = {
@@ -119,7 +119,7 @@ export default function WorkJourneyCard() {
         </Grid>
       </Box>
       
-      {formState?.error && <Typography color="error" >{formState.error}</Typography>}
+      {formState?.error && <Alert severity="error" >{formState.error}</Alert>}
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Button variant="contained" type="submit" loading={isSaving}>

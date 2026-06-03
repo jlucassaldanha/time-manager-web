@@ -99,22 +99,24 @@ export default function EditPunchCard({
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "center",
           mt: 2,
           width: "100%",
+          gap: 3
         }}
       >
-        <Button
-          variant="outlined"
-          color="error"
-          type="submit"
-          name="intent"
-          value="delete"
-          loading={isPending}
-          disabled={!initialData?.id}
-        >
-          Excluir
-        </Button>
+        {initialData?.id && (
+          <Button
+            variant="outlined"
+            color="error"
+            type="submit"
+            name="intent"
+            value="delete"
+            loading={isPending}
+          >
+            Excluir
+          </Button>
+        )}
 
         <Button
           variant="contained"
@@ -123,7 +125,7 @@ export default function EditPunchCard({
           value="save"
           loading={isPending}
         >
-          Salvar alterações
+          Salvar
         </Button>
       </Box>
     </Box>
