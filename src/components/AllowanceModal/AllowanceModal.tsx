@@ -7,7 +7,6 @@ import {
   Alert,
 } from "@mui/material";
 import AllowanceCard from "../AllowanceCard/AllowanceCard";
-import { AllowanceDto } from "@/core/domain/entities/Allowance";
 import {
   SingleAllowanceState,
   SubmitSingleAllowanceAction,
@@ -16,7 +15,6 @@ import { useActionState, useEffect } from "react";
 
 interface AllowanceModalProps {
   date: string | null;
-  initialData?: AllowanceDto | null;
   onClose: () => void;
   onSuccessRefresh: () => void;
 }
@@ -25,7 +23,6 @@ const initialState: SingleAllowanceState = {};
 
 export default function AllowanceModal({
   date,
-  initialData,
   onClose,
   onSuccessRefresh,
 }: AllowanceModalProps) {
@@ -52,7 +49,7 @@ export default function AllowanceModal({
           pr: 2,
         }}
       >
-        <DialogTitle>{initialData?.id ? "Editar" : "Adicionar"}</DialogTitle>
+        <DialogTitle>Adicionar</DialogTitle>
         <Button onClick={onClose}>Fechar</Button>
       </Box>
       <DialogContent dividers>
@@ -62,7 +59,6 @@ export default function AllowanceModal({
           </Alert>
         )}
         <AllowanceCard
-          initialData={initialData}
           date={date}
           formAction={formAction}
           isPending={isPending}

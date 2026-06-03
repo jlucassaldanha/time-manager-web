@@ -1,7 +1,7 @@
 "use client";
 
 import { registerAction } from "@/actions/AuthActions";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
 import { useActionState } from "react";
 
@@ -63,7 +63,7 @@ export default function Register() {
           }}
         />
       </Box>
-      {state?.error && <Typography color="error">{state.error}</Typography>}
+      {state?.error && <Alert severity="error" >{state.error}</Alert>}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
         <Button variant="contained" type="submit" loading={isPending}>
           Cadastrar

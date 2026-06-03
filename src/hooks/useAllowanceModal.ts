@@ -1,23 +1,23 @@
 import { useState } from "react";
-import { AllowanceDto } from "@/core/domain/entities/Allowance";
+//import { AllowanceDto } from "@/core/domain/entities/Allowance";
 
 export default function useSingleAllowanceModal(onSuccessRefresh: () => void) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [allowanceData, setAllowanceData] = useState<AllowanceDto | null>(null);
+  //const [allowanceData, setAllowanceData] = useState<AllowanceDto | null>(null);
 
   const handleOpenForAdd = (date: string) => {
     setSelectedDate(date);
-    setAllowanceData(null); 
+    //setAllowanceData(null); 
   };
 
-  const handleOpenForEdit = (date: string, data: AllowanceDto) => {
+  /*const handleOpenForEdit = (date: string, data: AllowanceDto) => {
     setSelectedDate(date);
     setAllowanceData(data); 
-  };
+  };*/
 
   const handleClose = () => {
     setSelectedDate(null);
-    setAllowanceData(null);
+    //setAllowanceData(null);
   };
 
   const handleSuccess = () => {
@@ -27,9 +27,9 @@ export default function useSingleAllowanceModal(onSuccessRefresh: () => void) {
 
   return {
     selectedDate,
-    allowanceData,
+    //allowanceData,
     handleOpenForAdd,
-    handleOpenForEdit,
+    //handleOpenForEdit,
     handleClose,
     handleSuccess
   };
