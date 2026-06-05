@@ -21,6 +21,7 @@ export default function EditPunchCard({
   date: string | null;
 }) {
   const [type, setType] = useState<string>(initialData?.type || "Entry");
+  const [activeIntent, setActiveIntent] = useState<"save" | "delete" | null>(null);
 
   const handleTypeChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -112,7 +113,9 @@ export default function EditPunchCard({
             type="submit"
             name="intent"
             value="delete"
-            loading={isPending}
+            onClick={() => setActiveIntent("delete")}
+            loading={isPending && activeIntent === "delete"}
+            disabled={isPending && activeIntent === "save"}
           >
             Excluir
           </Button>
@@ -123,7 +126,9 @@ export default function EditPunchCard({
           type="submit"
           name="intent"
           value="save"
-          loading={isPending}
+          onClick={() => setActiveIntent("save")}
+          loading={isPending && activeIntent === "save"}
+          disabled={isPending && activeIntent === "delete"}
         >
           Salvar
         </Button>
