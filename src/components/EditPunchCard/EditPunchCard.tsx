@@ -88,7 +88,7 @@ export default function EditPunchCard({
             label="Nota"
             multiline
             rows={4}
-            defaultValue={initialData?.note || "Sem nota"}
+            defaultValue={initialData?.note}
             slotProps={{
               inputLabel: {
                 shrink: true,
