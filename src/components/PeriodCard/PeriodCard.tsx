@@ -13,7 +13,7 @@ export default function PeriodCard({ period }: PeriodCardProps) {
   return (
     <Card>
       <CardContent sx={{ display: "flex", justifyContent: "center", padding: 2}}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: { xs: 2, md: 4 } }}>
           <Box>
             <Typography variant="subtitle1" gutterBottom>
               Saldo Total

@@ -23,7 +23,7 @@ export default function PeriodController({
       action={action}
       sx={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: { xs: "column", md: "row"},
         gap: 2,
       }}
     >

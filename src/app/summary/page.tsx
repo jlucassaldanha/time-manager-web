@@ -68,8 +68,8 @@ export default function Summary() {
         flexDirection: "column",
         gap: 3,
         padding: 2,
-        maxWidth: 400,
-        minWidth: 350,
+        maxWidth: { xs: 400, md: 800 },
+        minWidth: { xs: 350, md: 500 },
       }}
     >
       <Paper sx={{padding: 4}}>
