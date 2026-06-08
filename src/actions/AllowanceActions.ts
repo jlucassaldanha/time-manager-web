@@ -33,7 +33,7 @@ export async function SubmitSingleAllowanceAction(
     }
 
     if (!date || !duration || !justification) {
-      throw new Error("Minutos e justificativa são obrigatórios.");
+      throw new Error("Tempo e justificativa são obrigatórios.");
     }
 
     if (id) {

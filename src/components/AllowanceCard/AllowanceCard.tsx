@@ -47,7 +47,7 @@ export default function AllowanceCard({
           </Box>
           <TextField
             name="justification"
-            label="Justification"
+            label="Justificativa"
             multiline
             rows={3}
             slotProps={{

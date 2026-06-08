@@ -139,6 +139,10 @@ export async function UpdatePunchAction(
     return { success: false, error: "Usuário não autenticado." };
   }
 
+  if (note.length <= 0) {
+    return { success: false, error: "Nota é necessária" };
+  }
+
   const httpClient = new HttpClient(token)
   const repository = new ApiTimeRecordRepository(httpClient);
   const updateUseCase = new UpdatePunchUseCase(repository);
